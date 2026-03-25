@@ -1,0 +1,15 @@
+symfony/property-info v6 does not support phpdocumentor/reflection-docblock v6. Please stick to ^5.2 in your composer.json file in . (which is being imported from "C:\Users\Usuario\Documents\Pasantia\SisEquipos\backend\config/routes/api_platform.yaml"). Make sure there is a loader supporting the "api_platform" type.
+#0 C:\Users\Usuario\Documents\Pasantia\SisEquipos\backend\vendor\symfony\config\Loader\FileLoader.php(111): Symfony\Component\Config\Loader\FileLoader->doImport('.', 'api_platform', false, 'C:\\Users\\Usuari...')
+#1 C:\Users\Usuario\Documents\Pasantia\SisEquipos\backend\vendor\symfony\routing\Loader\YamlFileLoader.php(214): Symfony\Component\Config\Loader\FileLoader->import('.', 'api_platform', false, 'C:\\Users\\Usuari...', NULL)
+#2 C:\Users\Usuario\Documents\Pasantia\SisEquipos\backend\vendor\symfony\routing\Loader\YamlFileLoader.php(99): Symfony\Component\Routing\Loader\YamlFileLoader->parseImport(Object(Symfony\Component\Routing\RouteCollection), Array, 'C:\\Users\\Usuari...', 'C:\\Users\\Usuari...')
+#3 C:\Users\Usuario\Documents\Pasantia\SisEquipos\backend\vendor\symfony\config\Loader\FileLoader.php(180): Symfony\Component\Routing\Loader\YamlFileLoader->load('C:\\Users\\Usuari...', NULL)
+#4 C:\Users\Usuario\Documents\Pasantia\SisEquipos\backend\vendor\symfony\config\Loader\FileLoader.php(97): Symfony\Component\Config\Loader\FileLoader->doImport('C:\\Users\\Usuari...', NULL, false, 'C:\\Users\\Usuari...')
+#5 C:\Users\Usuario\Documents\Pasantia\SisEquipos\backend\vendor\symfony\routing\Loader\Configurator\RoutingConfigurator.php(45): Symfony\Component\Config\Loader\FileLoader->import('C:\\Users\\Usuari...', NULL, false, 'C:\\Users\\Usuari...', NULL)
+#6 C:\Users\Usuario\Documents\Pasantia\SisEquipos\backend\vendor\symfony\framework-bundle\Kernel\MicroKernelTrait.php(79): Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator->import('C:\\Users\\Usuari...')
+#7 C:\Users\Usuario\Documents\Pasantia\SisEquipos\backend\vendor\symfony\framework-bundle\Kernel\MicroKernelTrait.php(213): App\Kernel->configureRoutes(Object(Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator))
+#8 C:\Users\Usuario\Documents\Pasantia\SisEquipos\backend\vendor\symfony\routing\Loader\ObjectLoader.php(55): App\Kernel->loadRoutes(Object(Symfony\Component\Routing\Loader\ContainerLoader), 'dev')
+#9 C:\Users\Usuario\Documents\Pasantia\SisEquipos\backend\vendor\symfony\config\Loader\DelegatingLoader.php(37): Symfony\Component\Routing\Loader\ObjectLoader->load('kernel::loadRou...', 'service')
+#10 C:\Users\Usuario\Documents\Pasantia\SisEquipos\backend\vendor\symfony\framework-bundle\Routing\DelegatingLoader.php(67): Symfony\Component\Config\Loader\DelegatingLoader->load('kernel::loadRou...', 'service')
+#11 C:\Users\Usuario\Documents\Pasantia\SisEquipos\backend\vendor\symfony\framework-bundle\Routing\Router.php(65): Symfony\Bundle\FrameworkBundle\Routing\DelegatingLoader->load('kernel::loadRou...', 'service')
+#12 C:\Users\Usuario\Documents\Pasantia\SisEquipos\backend\debug_router.php(20): Symfony\Bundle\FrameworkBundle\Routing\Router->getRouteCollection()
+#13 {main}

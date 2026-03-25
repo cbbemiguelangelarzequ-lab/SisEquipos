@@ -1,0 +1,8 @@
+{
+    "intelephense.environment.phpVersion": "8.1.10",
+    "intelephense.diagnostics.exclude": [
+        "**/vendor/**"
+    ],
+    "php.validate.executablePath": "php",
+    "editor.formatOnSave": true
+}
