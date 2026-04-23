@@ -1,0 +1,84 @@
+# Guía de Actualización a Producción
+
+Para subir los últimos cambios al servidor de producción sin afectar el flujo de los usuarios, sigue exactamente estos pasos. Como dividimos el sistema en Backend y Frontend, se actualizan por separado.
+
+## PASO 1: Exportar y Reemplazar la Base de Datos
+
+Dado que hemos modificado la estructura de la base de datos (con nuevas tablas de evidencias, seccion-centros, etc.) y hemos limpiado los registros localmente, el primer paso es reemplazar la base de datos antigua que está en el servidor.
+
+1. En tu máquina local, abre **phpMyAdmin** (o el gestor SQL que utilices).
+2. Selecciona la base de datos `sis_equipos_cps` y ve a la pestaña **Exportar**. Descarga el archivo `.sql`.
+3. Entra al gestor de base de datos de tu **servidor de producción** (cPanel, phpMyAdmin remoto, etc).
+4. Selecciona la base de datos de producción (por ejemplo, `ecombecb_bd` o el nombre que tenga).
+5. **Elimina todas las tablas actuales** (Drop tables) para limpiarla.
+6. Ve a la pestaña **Importar** y sube tu archivo `.sql`.
+
+---
+
+## PASO 2: Subir el Código al Servidor
+
+Copia y reemplaza los siguientes archivos desde tu proyecto local `C:\Users\Usuario\Documents\Pasantia\SisEquipos` hacia las carpetas de tu servidor de producción:
+
+### 2A. Backend (Symfony)
+Copia la carpeta entera `backend/src/Command` y `backend/src/Entity` (si modificaste alguna entidad como Equipo) al servidor en la misma ruta:
+- Copiar contenido de: `backend/src/Command/*` 
+- Pegar en Servidor: `tu_ruta_produccion/backend/src/Command/`
+
+*(Nota: Solo necesitas mover los archivos nuevos de los comandos `Extraer...` y copiar la nueva versión de entidad `Equipo.php`)*
+
+### 2B. Frontend (React)
+El frontend no se copia archivo por archivo, **se compila**.
+1. En tu VS Code local, abre una terminal.
+2. Navega a la carpeta frontend: `cd frontend`
+3. Ejecuta el comando de compilación: `npm run build`
+4. Esto generará la carpeta **`dist`** dentro de `/frontend`.
+5. Sube todo el contenido de esa carpeta `dist` al directorio público de tu servidor Apache (`/ecomcb/` según tu configuración anterior).
+
+> [!CAUTION]
+> Asegúrate de que tu archivo `.env` o las variables de entorno en producción apunten correctamente a la base de datos oficial y mantengan la clave JWT (`JWT_SECRET_KEY`) que ya habías configurado.
+
+---
+
+## PASO 3: (Opcional) Normalizar la Base de Datos de Producción (Consola)
+
+> [!NOTE]
+> **Si completaste el PASO 1 exitosamente y subiste tu base de datos local, puedes ignorar este paso por completo.** Tu base de datos ya está limpia y estructurada.
+
+Si por algún motivo *no* reemplazaste la base de datos, debes ejecutar los siguientes comandos directamente en la consola de tu servidor de producción para limpiar los registros existentes: 
+
+Abre una consola apuntando al directorio `backend/` dentro de tu servidor de producción y ejecuta estos comandos estrictamente en este orden:
+
+```bash
+# 1. Extrae los modelos y las series escondidas
+php bin/console app:extraer-modelos
+
+# 2. Extrae las especificaciones (CPUs, Memorias RAM, Discos)
+php bin/console app:extraer-componentes
+
+# 3. Limpia las Marcas redundantes del nombre del activo
+php bin/console app:extraer-marcas
+
+# 4. Limpia el resto de modelos redundantes para la presentación
+php bin/console app:limpiar-nombres
+```
+
+> [!NOTE]
+> Verás un mensaje en verde después de cada comando indicando las docenas o cientos de equipos que se procesaron exitosamente.
+
+---
+
+## PASO 4: Limpiar Caché
+
+Para asegurarte de que el servidor remoto de Symfony lea bien los nuevos comandos y que el cliente no guarde copias viejas en su navegador, ejecuta:
+
+**En el Backend (Servidor):**
+```bash
+php bin/console cache:clear --env=prod
+```
+
+**En el Cliente (Navegadores):**
+Pide a los técnicos que presionen `Ctrl + F5` al entrar a la página la primera vez.
+
+---
+
+¡Con esto, todos verán inmediatamente el catálogo limpio con la información bien estructurada y las nuevas opciones de fotografías de mantenimiento!

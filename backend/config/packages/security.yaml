@@ -16,6 +16,7 @@ security:
         login:
             pattern: ^/api/login
             stateless: true
+            provider: app_user_provider
             json_login:
                 check_path: /api/login_check
                 username_path: email
@@ -29,7 +30,15 @@ security:
 
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
+        # Catálogos de solo lectura - accesibles sin autenticación
+        - { path: ^/api/categoria_equipos, methods: [GET], roles: PUBLIC_ACCESS }
+        - { path: ^/api/estado_equipos, methods: [GET], roles: PUBLIC_ACCESS }
+        - { path: ^/api/seccions, methods: [GET], roles: PUBLIC_ACCESS }
+        - { path: ^/api/tipo_componentes, methods: [GET], roles: PUBLIC_ACCESS }
+        - { path: ^/api/centros, methods: [GET], roles: PUBLIC_ACCESS }
+        - { path: ^/api/equipos, methods: [GET], roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+
 
 when@test:
     security:

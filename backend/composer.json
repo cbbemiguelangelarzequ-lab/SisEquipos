@@ -14,7 +14,7 @@
         "doctrine/orm": "^3.6",
         "lexik/jwt-authentication-bundle": "*",
         "nelmio/cors-bundle": "^2.6",
-        "phpdocumentor/reflection-docblock": "5.3",
+        "phpdocumentor/reflection-docblock": "^5.2",
         "phpdocumentor/type-resolver": "1.6",
         "phpstan/phpdoc-parser": "*",
         "symfony/asset": "6.4.*",

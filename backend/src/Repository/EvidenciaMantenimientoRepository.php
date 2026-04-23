@@ -2,14 +2,14 @@
 
 namespace App\Repository;
 
-use App\Entity\FotoEquipo;
+use App\Entity\EvidenciaMantenimiento;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class FotoEquipoRepository extends ServiceEntityRepository
+class EvidenciaMantenimientoRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, FotoEquipo::class);
+        parent::__construct($registry, EvidenciaMantenimiento::class);
     }
 }

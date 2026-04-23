@@ -36,7 +36,6 @@ class CreateAdminCommand extends Command
         $user = new Usuario();
         $user->setNombre('Administrador del Sistema');
         $user->setEmail($email);
-        $user->setCreadoEn(new \DateTime());
         
         $hashedPassword = $this->passwordHasher->hashPassword($user, 'admin123');
         $user->setPassword($hashedPassword);

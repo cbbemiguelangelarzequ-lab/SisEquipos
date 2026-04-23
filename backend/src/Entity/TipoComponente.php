@@ -7,22 +7,24 @@ use App\Repository\TipoComponenteRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TipoComponenteRepository::class)]
 #[ORM\Table(name: 'tipo_componente')]
-#[ApiResource]
+#[ApiResource(
+    paginationClientEnabled: true
+)]
 class TipoComponente
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['repuesto:read', 'componente:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 150)]
+    #[Groups(['repuesto:read', 'componente:read'])]
     private ?string $nombre = null;
-
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $descripcion = null;
 
     #[ORM\OneToMany(mappedBy: 'tipoComponente', targetEntity: RepuestoInventario::class)]
     private Collection $repuestos;
@@ -40,9 +42,6 @@ class TipoComponente
 
     public function getNombre(): ?string { return $this->nombre; }
     public function setNombre(string $nombre): static { $this->nombre = $nombre; return $this; }
-
-    public function getDescripcion(): ?string { return $this->descripcion; }
-    public function setDescripcion(?string $descripcion): static { $this->descripcion = $descripcion; return $this; }
 
     public function getRepuestos(): Collection { return $this->repuestos; }
     public function getComponentesEquipo(): Collection { return $this->componentesEquipo; }

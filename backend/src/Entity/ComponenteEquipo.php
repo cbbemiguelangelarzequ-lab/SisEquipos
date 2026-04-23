@@ -5,35 +5,50 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ComponenteEquipoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ComponenteEquipoRepository::class)]
 #[ORM\Table(name: 'componente_equipo')]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['componente:read']],
+    denormalizationContext: ['groups' => ['componente:write']],
+    paginationClientEnabled: true
+)]
+#[ApiFilter(SearchFilter::class, properties: ['equipo' => 'exact'])]
 class ComponenteEquipo
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['componente:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Equipo::class, inversedBy: 'componentes')]
-    #[ORM\JoinColumn(name: 'equipo_id', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'equipo_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Groups(['componente:read', 'componente:write'])]
     private ?Equipo $equipo = null;
 
     #[ORM\ManyToOne(targetEntity: TipoComponente::class, inversedBy: 'componentesEquipo')]
     #[ORM\JoinColumn(name: 'tipo_componente_id', referencedColumnName: 'id')]
+    #[Groups(['componente:read', 'componente:write'])]
     private ?TipoComponente $tipoComponente = null;
 
     #[ORM\Column(type: 'string', length: 200, nullable: true)]
+    #[Groups(['componente:read', 'componente:write'])]
     private ?string $descripcion = null;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Groups(['componente:read', 'componente:write'])]
     private ?string $numeroSerie = null;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Groups(['componente:read', 'componente:write'])]
     private ?string $estado = null; // Instalado, Dañado, Retirado
 
     #[ORM\Column(type: 'date', nullable: true)]
+    #[Groups(['componente:read', 'componente:write'])]
     private ?\DateTimeInterface $fechaInstalacion = null;
 
     public function getId(): ?int { return $this->id; }

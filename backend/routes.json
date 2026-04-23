@@ -1,0 +1,1855 @@
+﻿{
+    "api_genid": {
+        "path": "\/api\/.well-known\/genid\/{id}",
+        "pathRegex": "{^\/api\/\\.well\\-known\/genid\/(?P<id>[^\/]++)$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET|HEAD",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.not_exposed",
+            "_api_respond": "true"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "api_errors": {
+        "path": "\/api\/errors\/{status}",
+        "pathRegex": "{^\/api\/errors\/(?P<status>\\d+)$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET|HEAD",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.error_page"
+        },
+        "requirements": {
+            "status": "\\d+"
+        },
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "api_validation_errors": {
+        "path": "\/api\/validation_errors\/{id}",
+        "pathRegex": "{^\/api\/validation_errors\/(?P<id>[^\/]++)$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET|HEAD",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.not_exposed"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "api_entrypoint": {
+        "path": "\/api\/{index}.{_format}",
+        "pathRegex": "{^\/api(?:\/(?P<index>index)(?:\\.(?P<_format>[^\/]++))?)?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET|HEAD",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.entrypoint",
+            "_format": "",
+            "_api_respond": "true",
+            "index": "index"
+        },
+        "requirements": {
+            "index": "index"
+        },
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "api_doc": {
+        "path": "\/api\/docs.{_format}",
+        "pathRegex": "{^\/api\/docs(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET|HEAD",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.documentation",
+            "_format": "",
+            "_api_respond": "true"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "api_jsonld_context": {
+        "path": "\/api\/contexts\/{shortName}.{_format}",
+        "pathRegex": "{^\/api\/contexts\/(?P<shortName>[^.]+)(?:\\.(?P<_format>jsonld))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET|HEAD",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.jsonld.action.context",
+            "_format": "jsonld",
+            "_api_respond": "true"
+        },
+        "requirements": {
+            "shortName": "[^.]+",
+            "_format": "jsonld"
+        },
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_validation_errors_problem": {
+        "path": "\/api\/validation_errors\/{id}",
+        "pathRegex": "{^\/api\/validation_errors\/(?P<id>[^\/]++)$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "ApiPlatform\\Validator\\Exception\\ValidationException",
+            "_api_operation_name": "_api_validation_errors_problem"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_validation_errors_hydra": {
+        "path": "\/api\/validation_errors\/{id}",
+        "pathRegex": "{^\/api\/validation_errors\/(?P<id>[^\/]++)$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "ApiPlatform\\Validator\\Exception\\ValidationException",
+            "_api_operation_name": "_api_validation_errors_hydra"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_validation_errors_jsonapi": {
+        "path": "\/api\/validation_errors\/{id}",
+        "pathRegex": "{^\/api\/validation_errors\/(?P<id>[^\/]++)$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "ApiPlatform\\Validator\\Exception\\ValidationException",
+            "_api_operation_name": "_api_validation_errors_jsonapi"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/categoria_equipos\/{id}{._format}_get": {
+        "path": "\/api\/categoria_equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/categoria_equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\CategoriaEquipo",
+            "_api_operation_name": "_api_\/categoria_equipos\/{id}{._format}_get"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/categoria_equipos{._format}_get_collection": {
+        "path": "\/api\/categoria_equipos.{_format}",
+        "pathRegex": "{^\/api\/categoria_equipos(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\CategoriaEquipo",
+            "_api_operation_name": "_api_\/categoria_equipos{._format}_get_collection"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/categoria_equipos{._format}_post": {
+        "path": "\/api\/categoria_equipos.{_format}",
+        "pathRegex": "{^\/api\/categoria_equipos(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "POST",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\CategoriaEquipo",
+            "_api_operation_name": "_api_\/categoria_equipos{._format}_post"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/categoria_equipos\/{id}{._format}_put": {
+        "path": "\/api\/categoria_equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/categoria_equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PUT",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\CategoriaEquipo",
+            "_api_operation_name": "_api_\/categoria_equipos\/{id}{._format}_put"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/categoria_equipos\/{id}{._format}_patch": {
+        "path": "\/api\/categoria_equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/categoria_equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PATCH",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\CategoriaEquipo",
+            "_api_operation_name": "_api_\/categoria_equipos\/{id}{._format}_patch"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/categoria_equipos\/{id}{._format}_delete": {
+        "path": "\/api\/categoria_equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/categoria_equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "DELETE",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\CategoriaEquipo",
+            "_api_operation_name": "_api_\/categoria_equipos\/{id}{._format}_delete"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/componente_equipos\/{id}{._format}_get": {
+        "path": "\/api\/componente_equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/componente_equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\ComponenteEquipo",
+            "_api_operation_name": "_api_\/componente_equipos\/{id}{._format}_get"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/componente_equipos{._format}_get_collection": {
+        "path": "\/api\/componente_equipos.{_format}",
+        "pathRegex": "{^\/api\/componente_equipos(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\ComponenteEquipo",
+            "_api_operation_name": "_api_\/componente_equipos{._format}_get_collection"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/componente_equipos{._format}_post": {
+        "path": "\/api\/componente_equipos.{_format}",
+        "pathRegex": "{^\/api\/componente_equipos(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "POST",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\ComponenteEquipo",
+            "_api_operation_name": "_api_\/componente_equipos{._format}_post"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/componente_equipos\/{id}{._format}_put": {
+        "path": "\/api\/componente_equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/componente_equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PUT",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\ComponenteEquipo",
+            "_api_operation_name": "_api_\/componente_equipos\/{id}{._format}_put"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/componente_equipos\/{id}{._format}_patch": {
+        "path": "\/api\/componente_equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/componente_equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PATCH",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\ComponenteEquipo",
+            "_api_operation_name": "_api_\/componente_equipos\/{id}{._format}_patch"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/componente_equipos\/{id}{._format}_delete": {
+        "path": "\/api\/componente_equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/componente_equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "DELETE",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\ComponenteEquipo",
+            "_api_operation_name": "_api_\/componente_equipos\/{id}{._format}_delete"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/equipos\/{id}{._format}_get": {
+        "path": "\/api\/equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Equipo",
+            "_api_operation_name": "_api_\/equipos\/{id}{._format}_get"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/equipos{._format}_get_collection": {
+        "path": "\/api\/equipos.{_format}",
+        "pathRegex": "{^\/api\/equipos(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Equipo",
+            "_api_operation_name": "_api_\/equipos{._format}_get_collection"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/equipos{._format}_post": {
+        "path": "\/api\/equipos.{_format}",
+        "pathRegex": "{^\/api\/equipos(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "POST",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Equipo",
+            "_api_operation_name": "_api_\/equipos{._format}_post"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/equipos\/{id}{._format}_put": {
+        "path": "\/api\/equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PUT",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Equipo",
+            "_api_operation_name": "_api_\/equipos\/{id}{._format}_put"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/equipos\/{id}{._format}_patch": {
+        "path": "\/api\/equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PATCH",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Equipo",
+            "_api_operation_name": "_api_\/equipos\/{id}{._format}_patch"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/equipos\/{id}{._format}_delete": {
+        "path": "\/api\/equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "DELETE",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Equipo",
+            "_api_operation_name": "_api_\/equipos\/{id}{._format}_delete"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/estado_equipos\/{id}{._format}_get": {
+        "path": "\/api\/estado_equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/estado_equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\EstadoEquipo",
+            "_api_operation_name": "_api_\/estado_equipos\/{id}{._format}_get"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/estado_equipos{._format}_get_collection": {
+        "path": "\/api\/estado_equipos.{_format}",
+        "pathRegex": "{^\/api\/estado_equipos(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\EstadoEquipo",
+            "_api_operation_name": "_api_\/estado_equipos{._format}_get_collection"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/estado_equipos{._format}_post": {
+        "path": "\/api\/estado_equipos.{_format}",
+        "pathRegex": "{^\/api\/estado_equipos(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "POST",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\EstadoEquipo",
+            "_api_operation_name": "_api_\/estado_equipos{._format}_post"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/estado_equipos\/{id}{._format}_put": {
+        "path": "\/api\/estado_equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/estado_equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PUT",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\EstadoEquipo",
+            "_api_operation_name": "_api_\/estado_equipos\/{id}{._format}_put"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/estado_equipos\/{id}{._format}_patch": {
+        "path": "\/api\/estado_equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/estado_equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PATCH",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\EstadoEquipo",
+            "_api_operation_name": "_api_\/estado_equipos\/{id}{._format}_patch"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/estado_equipos\/{id}{._format}_delete": {
+        "path": "\/api\/estado_equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/estado_equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "DELETE",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\EstadoEquipo",
+            "_api_operation_name": "_api_\/estado_equipos\/{id}{._format}_delete"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/foto_equipos\/{id}{._format}_get": {
+        "path": "\/api\/foto_equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/foto_equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\FotoEquipo",
+            "_api_operation_name": "_api_\/foto_equipos\/{id}{._format}_get"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/foto_equipos{._format}_get_collection": {
+        "path": "\/api\/foto_equipos.{_format}",
+        "pathRegex": "{^\/api\/foto_equipos(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\FotoEquipo",
+            "_api_operation_name": "_api_\/foto_equipos{._format}_get_collection"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/foto_equipos{._format}_post": {
+        "path": "\/api\/foto_equipos.{_format}",
+        "pathRegex": "{^\/api\/foto_equipos(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "POST",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\FotoEquipo",
+            "_api_operation_name": "_api_\/foto_equipos{._format}_post"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/foto_equipos\/{id}{._format}_put": {
+        "path": "\/api\/foto_equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/foto_equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PUT",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\FotoEquipo",
+            "_api_operation_name": "_api_\/foto_equipos\/{id}{._format}_put"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/foto_equipos\/{id}{._format}_patch": {
+        "path": "\/api\/foto_equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/foto_equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PATCH",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\FotoEquipo",
+            "_api_operation_name": "_api_\/foto_equipos\/{id}{._format}_patch"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/foto_equipos\/{id}{._format}_delete": {
+        "path": "\/api\/foto_equipos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/foto_equipos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "DELETE",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\FotoEquipo",
+            "_api_operation_name": "_api_\/foto_equipos\/{id}{._format}_delete"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/historial_mantenimientos\/{id}{._format}_get": {
+        "path": "\/api\/historial_mantenimientos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/historial_mantenimientos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\HistorialMantenimiento",
+            "_api_operation_name": "_api_\/historial_mantenimientos\/{id}{._format}_get"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/historial_mantenimientos{._format}_get_collection": {
+        "path": "\/api\/historial_mantenimientos.{_format}",
+        "pathRegex": "{^\/api\/historial_mantenimientos(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\HistorialMantenimiento",
+            "_api_operation_name": "_api_\/historial_mantenimientos{._format}_get_collection"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/historial_mantenimientos{._format}_post": {
+        "path": "\/api\/historial_mantenimientos.{_format}",
+        "pathRegex": "{^\/api\/historial_mantenimientos(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "POST",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\HistorialMantenimiento",
+            "_api_operation_name": "_api_\/historial_mantenimientos{._format}_post"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/historial_mantenimientos\/{id}{._format}_put": {
+        "path": "\/api\/historial_mantenimientos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/historial_mantenimientos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PUT",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\HistorialMantenimiento",
+            "_api_operation_name": "_api_\/historial_mantenimientos\/{id}{._format}_put"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/historial_mantenimientos\/{id}{._format}_patch": {
+        "path": "\/api\/historial_mantenimientos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/historial_mantenimientos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PATCH",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\HistorialMantenimiento",
+            "_api_operation_name": "_api_\/historial_mantenimientos\/{id}{._format}_patch"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/historial_mantenimientos\/{id}{._format}_delete": {
+        "path": "\/api\/historial_mantenimientos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/historial_mantenimientos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "DELETE",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\HistorialMantenimiento",
+            "_api_operation_name": "_api_\/historial_mantenimientos\/{id}{._format}_delete"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/reemplazo_componentes\/{id}{._format}_get": {
+        "path": "\/api\/reemplazo_componentes\/{id}.{_format}",
+        "pathRegex": "{^\/api\/reemplazo_componentes\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\ReemplazoComponente",
+            "_api_operation_name": "_api_\/reemplazo_componentes\/{id}{._format}_get"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/reemplazo_componentes{._format}_get_collection": {
+        "path": "\/api\/reemplazo_componentes.{_format}",
+        "pathRegex": "{^\/api\/reemplazo_componentes(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\ReemplazoComponente",
+            "_api_operation_name": "_api_\/reemplazo_componentes{._format}_get_collection"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/reemplazo_componentes{._format}_post": {
+        "path": "\/api\/reemplazo_componentes.{_format}",
+        "pathRegex": "{^\/api\/reemplazo_componentes(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "POST",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\ReemplazoComponente",
+            "_api_operation_name": "_api_\/reemplazo_componentes{._format}_post"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/reemplazo_componentes\/{id}{._format}_put": {
+        "path": "\/api\/reemplazo_componentes\/{id}.{_format}",
+        "pathRegex": "{^\/api\/reemplazo_componentes\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PUT",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\ReemplazoComponente",
+            "_api_operation_name": "_api_\/reemplazo_componentes\/{id}{._format}_put"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/reemplazo_componentes\/{id}{._format}_patch": {
+        "path": "\/api\/reemplazo_componentes\/{id}.{_format}",
+        "pathRegex": "{^\/api\/reemplazo_componentes\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PATCH",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\ReemplazoComponente",
+            "_api_operation_name": "_api_\/reemplazo_componentes\/{id}{._format}_patch"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/reemplazo_componentes\/{id}{._format}_delete": {
+        "path": "\/api\/reemplazo_componentes\/{id}.{_format}",
+        "pathRegex": "{^\/api\/reemplazo_componentes\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "DELETE",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\ReemplazoComponente",
+            "_api_operation_name": "_api_\/reemplazo_componentes\/{id}{._format}_delete"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/repuesto_inventarios\/{id}{._format}_get": {
+        "path": "\/api\/repuesto_inventarios\/{id}.{_format}",
+        "pathRegex": "{^\/api\/repuesto_inventarios\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\RepuestoInventario",
+            "_api_operation_name": "_api_\/repuesto_inventarios\/{id}{._format}_get"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/repuesto_inventarios{._format}_get_collection": {
+        "path": "\/api\/repuesto_inventarios.{_format}",
+        "pathRegex": "{^\/api\/repuesto_inventarios(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\RepuestoInventario",
+            "_api_operation_name": "_api_\/repuesto_inventarios{._format}_get_collection"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/repuesto_inventarios{._format}_post": {
+        "path": "\/api\/repuesto_inventarios.{_format}",
+        "pathRegex": "{^\/api\/repuesto_inventarios(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "POST",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\RepuestoInventario",
+            "_api_operation_name": "_api_\/repuesto_inventarios{._format}_post"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/repuesto_inventarios\/{id}{._format}_put": {
+        "path": "\/api\/repuesto_inventarios\/{id}.{_format}",
+        "pathRegex": "{^\/api\/repuesto_inventarios\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PUT",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\RepuestoInventario",
+            "_api_operation_name": "_api_\/repuesto_inventarios\/{id}{._format}_put"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/repuesto_inventarios\/{id}{._format}_patch": {
+        "path": "\/api\/repuesto_inventarios\/{id}.{_format}",
+        "pathRegex": "{^\/api\/repuesto_inventarios\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PATCH",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\RepuestoInventario",
+            "_api_operation_name": "_api_\/repuesto_inventarios\/{id}{._format}_patch"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/repuesto_inventarios\/{id}{._format}_delete": {
+        "path": "\/api\/repuesto_inventarios\/{id}.{_format}",
+        "pathRegex": "{^\/api\/repuesto_inventarios\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "DELETE",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\RepuestoInventario",
+            "_api_operation_name": "_api_\/repuesto_inventarios\/{id}{._format}_delete"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/rols\/{id}{._format}_get": {
+        "path": "\/api\/rols\/{id}.{_format}",
+        "pathRegex": "{^\/api\/rols\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Rol",
+            "_api_operation_name": "_api_\/rols\/{id}{._format}_get"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/rols{._format}_get_collection": {
+        "path": "\/api\/rols.{_format}",
+        "pathRegex": "{^\/api\/rols(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Rol",
+            "_api_operation_name": "_api_\/rols{._format}_get_collection"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/rols{._format}_post": {
+        "path": "\/api\/rols.{_format}",
+        "pathRegex": "{^\/api\/rols(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "POST",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Rol",
+            "_api_operation_name": "_api_\/rols{._format}_post"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/rols\/{id}{._format}_put": {
+        "path": "\/api\/rols\/{id}.{_format}",
+        "pathRegex": "{^\/api\/rols\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PUT",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Rol",
+            "_api_operation_name": "_api_\/rols\/{id}{._format}_put"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/rols\/{id}{._format}_patch": {
+        "path": "\/api\/rols\/{id}.{_format}",
+        "pathRegex": "{^\/api\/rols\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PATCH",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Rol",
+            "_api_operation_name": "_api_\/rols\/{id}{._format}_patch"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/rols\/{id}{._format}_delete": {
+        "path": "\/api\/rols\/{id}.{_format}",
+        "pathRegex": "{^\/api\/rols\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "DELETE",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Rol",
+            "_api_operation_name": "_api_\/rols\/{id}{._format}_delete"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/seccions\/{id}{._format}_get": {
+        "path": "\/api\/seccions\/{id}.{_format}",
+        "pathRegex": "{^\/api\/seccions\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Seccion",
+            "_api_operation_name": "_api_\/seccions\/{id}{._format}_get"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/seccions{._format}_get_collection": {
+        "path": "\/api\/seccions.{_format}",
+        "pathRegex": "{^\/api\/seccions(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Seccion",
+            "_api_operation_name": "_api_\/seccions{._format}_get_collection"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/seccions{._format}_post": {
+        "path": "\/api\/seccions.{_format}",
+        "pathRegex": "{^\/api\/seccions(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "POST",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Seccion",
+            "_api_operation_name": "_api_\/seccions{._format}_post"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/seccions\/{id}{._format}_put": {
+        "path": "\/api\/seccions\/{id}.{_format}",
+        "pathRegex": "{^\/api\/seccions\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PUT",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Seccion",
+            "_api_operation_name": "_api_\/seccions\/{id}{._format}_put"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/seccions\/{id}{._format}_patch": {
+        "path": "\/api\/seccions\/{id}.{_format}",
+        "pathRegex": "{^\/api\/seccions\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PATCH",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Seccion",
+            "_api_operation_name": "_api_\/seccions\/{id}{._format}_patch"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/seccions\/{id}{._format}_delete": {
+        "path": "\/api\/seccions\/{id}.{_format}",
+        "pathRegex": "{^\/api\/seccions\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "DELETE",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Seccion",
+            "_api_operation_name": "_api_\/seccions\/{id}{._format}_delete"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/solicitud_mantenimientos\/{id}{._format}_get": {
+        "path": "\/api\/solicitud_mantenimientos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/solicitud_mantenimientos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\SolicitudMantenimiento",
+            "_api_operation_name": "_api_\/solicitud_mantenimientos\/{id}{._format}_get"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/solicitud_mantenimientos{._format}_get_collection": {
+        "path": "\/api\/solicitud_mantenimientos.{_format}",
+        "pathRegex": "{^\/api\/solicitud_mantenimientos(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\SolicitudMantenimiento",
+            "_api_operation_name": "_api_\/solicitud_mantenimientos{._format}_get_collection"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/solicitud_mantenimientos{._format}_post": {
+        "path": "\/api\/solicitud_mantenimientos.{_format}",
+        "pathRegex": "{^\/api\/solicitud_mantenimientos(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "POST",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\SolicitudMantenimiento",
+            "_api_operation_name": "_api_\/solicitud_mantenimientos{._format}_post"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/solicitud_mantenimientos\/{id}{._format}_put": {
+        "path": "\/api\/solicitud_mantenimientos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/solicitud_mantenimientos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PUT",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\SolicitudMantenimiento",
+            "_api_operation_name": "_api_\/solicitud_mantenimientos\/{id}{._format}_put"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/solicitud_mantenimientos\/{id}{._format}_patch": {
+        "path": "\/api\/solicitud_mantenimientos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/solicitud_mantenimientos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PATCH",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\SolicitudMantenimiento",
+            "_api_operation_name": "_api_\/solicitud_mantenimientos\/{id}{._format}_patch"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/solicitud_mantenimientos\/{id}{._format}_delete": {
+        "path": "\/api\/solicitud_mantenimientos\/{id}.{_format}",
+        "pathRegex": "{^\/api\/solicitud_mantenimientos\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "DELETE",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\SolicitudMantenimiento",
+            "_api_operation_name": "_api_\/solicitud_mantenimientos\/{id}{._format}_delete"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/tipo_componentes\/{id}{._format}_get": {
+        "path": "\/api\/tipo_componentes\/{id}.{_format}",
+        "pathRegex": "{^\/api\/tipo_componentes\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\TipoComponente",
+            "_api_operation_name": "_api_\/tipo_componentes\/{id}{._format}_get"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/tipo_componentes{._format}_get_collection": {
+        "path": "\/api\/tipo_componentes.{_format}",
+        "pathRegex": "{^\/api\/tipo_componentes(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\TipoComponente",
+            "_api_operation_name": "_api_\/tipo_componentes{._format}_get_collection"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/tipo_componentes{._format}_post": {
+        "path": "\/api\/tipo_componentes.{_format}",
+        "pathRegex": "{^\/api\/tipo_componentes(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "POST",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\TipoComponente",
+            "_api_operation_name": "_api_\/tipo_componentes{._format}_post"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/tipo_componentes\/{id}{._format}_put": {
+        "path": "\/api\/tipo_componentes\/{id}.{_format}",
+        "pathRegex": "{^\/api\/tipo_componentes\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PUT",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\TipoComponente",
+            "_api_operation_name": "_api_\/tipo_componentes\/{id}{._format}_put"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/tipo_componentes\/{id}{._format}_patch": {
+        "path": "\/api\/tipo_componentes\/{id}.{_format}",
+        "pathRegex": "{^\/api\/tipo_componentes\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PATCH",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\TipoComponente",
+            "_api_operation_name": "_api_\/tipo_componentes\/{id}{._format}_patch"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/tipo_componentes\/{id}{._format}_delete": {
+        "path": "\/api\/tipo_componentes\/{id}.{_format}",
+        "pathRegex": "{^\/api\/tipo_componentes\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "DELETE",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\TipoComponente",
+            "_api_operation_name": "_api_\/tipo_componentes\/{id}{._format}_delete"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/usuarios\/{id}{._format}_get": {
+        "path": "\/api\/usuarios\/{id}.{_format}",
+        "pathRegex": "{^\/api\/usuarios\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Usuario",
+            "_api_operation_name": "_api_\/usuarios\/{id}{._format}_get"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/usuarios{._format}_get_collection": {
+        "path": "\/api\/usuarios.{_format}",
+        "pathRegex": "{^\/api\/usuarios(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "GET",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Usuario",
+            "_api_operation_name": "_api_\/usuarios{._format}_get_collection"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/usuarios{._format}_post": {
+        "path": "\/api\/usuarios.{_format}",
+        "pathRegex": "{^\/api\/usuarios(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "POST",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Usuario",
+            "_api_operation_name": "_api_\/usuarios{._format}_post"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/usuarios\/{id}{._format}_put": {
+        "path": "\/api\/usuarios\/{id}.{_format}",
+        "pathRegex": "{^\/api\/usuarios\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PUT",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Usuario",
+            "_api_operation_name": "_api_\/usuarios\/{id}{._format}_put"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/usuarios\/{id}{._format}_patch": {
+        "path": "\/api\/usuarios\/{id}.{_format}",
+        "pathRegex": "{^\/api\/usuarios\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "PATCH",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Usuario",
+            "_api_operation_name": "_api_\/usuarios\/{id}{._format}_patch"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_api_\/usuarios\/{id}{._format}_delete": {
+        "path": "\/api\/usuarios\/{id}.{_format}",
+        "pathRegex": "{^\/api\/usuarios\/(?P<id>[^\/\\.]++)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "DELETE",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "api_platform.action.placeholder",
+            "_format": null,
+            "_stateless": true,
+            "_api_resource_class": "App\\Entity\\Usuario",
+            "_api_operation_name": "_api_\/usuarios\/{id}{._format}_delete"
+        },
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "_preview_error": {
+        "path": "\/_error\/{code}.{_format}",
+        "pathRegex": "{^\/_error\/(?P<code>\\d+)(?:\\.(?P<_format>[^\/]++))?$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "ANY",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": {
+            "_controller": "error_controller::preview",
+            "_format": "html"
+        },
+        "requirements": {
+            "code": "\\d+"
+        },
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    },
+    "api_login_check": {
+        "path": "\/api\/login_check",
+        "pathRegex": "{^\/api\/login_check$}sDu",
+        "host": "ANY",
+        "hostRegex": "",
+        "scheme": "ANY",
+        "method": "POST",
+        "class": "Symfony\\Component\\Routing\\Route",
+        "defaults": [],
+        "requirements": "NO CUSTOM",
+        "options": {
+            "compiler_class": "Symfony\\Component\\Routing\\RouteCompiler",
+            "utf8": true
+        }
+    }
+}

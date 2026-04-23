@@ -3,12 +3,15 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\ReemplazoComponenteRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReemplazoComponenteRepository::class)]
 #[ORM\Table(name: 'reemplazo_componente')]
 #[ApiResource]
+#[ApiFilter(SearchFilter::class, properties: ['historialMantenimiento' => 'exact'])]
 class ReemplazoComponente
 {
     #[ORM\Id]
@@ -17,14 +20,10 @@ class ReemplazoComponente
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: HistorialMantenimiento::class)]
-    #[ORM\JoinColumn(name: 'historial_mantenimiento_id', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'historial_mantenimiento_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private ?HistorialMantenimiento $historialMantenimiento = null;
 
-    #[ORM\OneToOne(targetEntity: ComponenteEquipo::class)]
-    #[ORM\JoinColumn(name: 'componente_retirado_id', referencedColumnName: 'id', nullable: true)]
-    private ?ComponenteEquipo $componenteRetirado = null;
-
-    #[ORM\OneToOne(targetEntity: RepuestoInventario::class)]
+    #[ORM\ManyToOne(targetEntity: RepuestoInventario::class)]
     #[ORM\JoinColumn(name: 'repuesto_utilizado_id', referencedColumnName: 'id', nullable: true)]
     private ?RepuestoInventario $repuestoUtilizado = null;
 
@@ -35,9 +34,6 @@ class ReemplazoComponente
 
     public function getHistorialMantenimiento(): ?HistorialMantenimiento { return $this->historialMantenimiento; }
     public function setHistorialMantenimiento(?HistorialMantenimiento $h): static { $this->historialMantenimiento = $h; return $this; }
-
-    public function getComponenteRetirado(): ?ComponenteEquipo { return $this->componenteRetirado; }
-    public function setComponenteRetirado(?ComponenteEquipo $c): static { $this->componenteRetirado = $c; return $this; }
 
     public function getRepuestoUtilizado(): ?RepuestoInventario { return $this->repuestoUtilizado; }
     public function setRepuestoUtilizado(?RepuestoInventario $r): static { $this->repuestoUtilizado = $r; return $this; }

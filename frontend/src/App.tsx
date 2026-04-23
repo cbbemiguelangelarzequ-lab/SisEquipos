@@ -5,9 +5,20 @@ import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
 import { Inventario } from './pages/Inventario';
 import { Secciones } from './pages/Secciones';
+import { Administracion } from './pages/Administracion';
+import { Mantenimiento } from './pages/Mantenimiento';
+import { Bodega } from './pages/Bodega';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,  // datos válidos por 5 min — no re-fetches al navegar
+      gcTime:    10 * 60 * 1000, // mantiene cache 10 min
+      retry: 1,
+    },
+  },
+});
 
 function App() {
   return (
@@ -21,6 +32,9 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="inventario" element={<Inventario />} />
             <Route path="secciones" element={<Secciones />} />
+            <Route path="administracion" element={<Administracion />} />
+            <Route path="mantenimiento" element={<Mantenimiento />} />
+            <Route path="bodega" element={<Bodega />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>
@@ -31,3 +45,4 @@ function App() {
 }
 
 export default App;
+

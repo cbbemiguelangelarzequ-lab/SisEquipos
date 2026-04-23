@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create Axios instance with default config
 export const api = axios.create({
-  baseURL: 'http://localhost:8000/api', // adjust accordingly based on your backend Setup
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -19,7 +19,7 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
-    Promise.reject(error);
+    return Promise.reject(error);
   }
 );
 
@@ -31,9 +31,10 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     if (error.response?.status === 401 && !originalRequest._retry) {
-      // Handle token expiration: Logout user gracefully
       localStorage.removeItem('token');
       window.location.href = '/login';
+    } else {
+      console.error('API ERROR:', originalRequest?.url, error.message, error.response?.status);
     }
     return Promise.reject(error);
   }

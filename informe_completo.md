@@ -1,92 +1,198 @@
-# Informe Detallado: Proyecto SisEquipos (Backend)
+# Informe de Avance del Proyecto: SisEquipos
 
-Este documento detalla todas las configuraciones, implementaciones y resoluciones de problemas realizadas hasta el momento en el backend del *Sistema de Control y Seguimiento de Equipos de la Caja Petrolera de Salud*.
+**Sistema de Control y Seguimiento de Equipos — Caja Petrolera de Salud**
 
-## 1. Entorno de Desarrollo y Framework
-- **Lenguaje:** PHP 8.1.10.
-- **Framework Ocupado:** Symfony 6.4 (esqueleto base).
-- **Gestor de Dependencias:** Composer 2.8.
-- **Base de Datos:** MySQL (con Workbench). 
-  - **Base de datos:** `sis_equipos_cps`
-  - **Usuario:** `root`
-  - **Contraseña:** `micvis02`
+---
 
-## 2. Dependencias y Paquetes Core Instalados
-Se instalaron librerías especializadas para agilizar el desarrollo de una API profesional:
-- `api-platform/core` (versión 3.x): Para generar de forma instantánea todos los endpoints (Rutas) API RESTful.
-- `doctrine/orm-pack` y `doctrine/doctrine-migrations-bundle`: Para mapear objetos directamente a tablas SQL.
-- `lexik/jwt-authentication-bundle` (v2.18): Estándar de la industria para generar JSON Web Tokens (JWT) seguros.
-- `nelmio/cors-bundle`: Para permitir el acceso desde interfaces gráficas separadas (como React o Vue) al backend.
-- `symfony/maker-bundle`: Utilidad para crear clases, comandos y controladores rápidamente.
-- Módulos de validación: `symfony/validator` y `symfony/serializer-pack`.
+## Introducción
 
-## 3. Modelo de Datos Entidad-Relación (13 Tablas)
-Se analizaron los requerimientos iniciales y se transcribieron en 13 Entidades en Symfony (usando PHP Atributos para Doctrine):
-1. **Rol:** Jerarquías del sistema.
-2. **Usuario:** Credenciales y rol asociado (`email`, `password` hasheada).
-3. **Seccion:** Ubicaciones físicas.
-4. **CategoriaEquipo:** Ej. Computadoras, Impresoras.
-5. **EstadoEquipo:** Operativo, Reparación, Baja.
-6. **TipoComponente:** RAM, Discos Duros.
-7. **RepuestoInventario:** Componentes para stock y repuestos.
-8. **Equipo:** Tabla central, vincula sección, categoría y estado.
-9. **ComponenteEquipo:** Elementos actualmente instalados dentro de un Equipo.
-10. **FotoEquipo:** Galería de imágenes vinculada a los equipos.
-11. **SolicitudMantenimiento:** Peticiones hechas por los usuarios sobre equipos dañados.
-12. **HistorialMantenimiento:** Bitácora de las reparaciones realizadas e informes técnicos.
-13. **ReemplazoComponente:** Rastreo individual de los repuestos consumidos en un mantenimiento y retirados del inventario.
+El presente informe describe de manera detallada el trabajo realizado durante el desarrollo del proyecto *SisEquipos*, un sistema integral diseñado para gestionar, controlar y dar seguimiento a los equipos tecnológicos y médicos de la Caja Petrolera de Salud. El documento abarca desde la configuración del entorno de desarrollo, pasando por el diseño del modelo de datos, hasta la implementación del frontend en React, explicando las decisiones técnicas tomadas y los problemas que se resolvieron a lo largo del proceso.
 
-> Tras generar estas 13 entidades, se ejecutó la Migración de SQL exitosamente, poblando la base de datos MySQL con todas sus claves foráneas.
+---
 
-## 4. Configuración de Seguridad y JWT
-1. **Generación de Llaves RSA:** 
-   Debido a una ausencia nativa de comandos OpenSSL en el PowerShell de Windows, se diseñó un script PHP local que utilizó explícitamente el archivo [openssl.cnf](file:///C:/laragon/bin/php/php-8.1.10-Win32-vs16-x64/extras/ssl/openssl.cnf) de Laragon. Esto nos permitió generar satisfactoriamente `private.pem` y `public.pem`.
-2. **Endpoint de Autenticación (`/api/login_check`):**
-   Se configuró el router [routes.yaml](file:///c:/Users/Usuario/Documents/Pasantia/SisEquipos/backend/config/routes.yaml) y el firewall ([security.yaml](file:///c:/Users/Usuario/Documents/Pasantia/SisEquipos/backend/config/packages/security.yaml)). El sistema ahora escucha peticiones POST con un JSON estructurado así:
-   `{"email": "...", "password": "..."}`
-3. **Ocultamiento de Contraseñas (Serialización):**
-   Se configuraron **Grupos de Lectura/Escritura** en la tabla **Usuario** (`#[Groups]`) para asegurar que nuestra API jamás devuelva o imprima las contraseñas cifradas al consultar usuarios por la API RESTful.
-4. **Script Generador de Usuarios Administradores:**
-   Dado que las contraseñas deben estar guardadas al estilo *hash* unidireccional (BCrypt/Sodium), hemos elaborado un comando en la consola de Symfony (`php bin/console app:create-admin`) que inserta un superusuario funcional automáticamente y cifra su contraseña.
-   - **Superusuario Inyectado:** `admin@cps.gob.bo`
-   - **Contraseña:** `admin123`
+## 1. Entorno de Desarrollo y Tecnologías Utilizadas
 
-## 5. Caza de Bugs (Troubleshooting) y Depuración
-El proyecto enfrentó considerables desafíos en las configuraciones de versiones al tratar de acoplar Symfony 6.4 (LTS estable) con API Platform v3 y Lexik JWT. Todas resueltas:
-- **Conflicto JWT + API Platform (v3.4.0):** API Platform v3 trae una configuración obligatoria conflictiva que inyectaba bloques YAML corrompidos en el `LexikJWT`. Esto se parchó diseñando un limpiador en PHP para eludir temporalmente la lógica dañada dentro del script fuente original hasta lograr mitigarlo a través de [api_platform.yaml](file:///c:/Users/Usuario/Documents/Pasantia/SisEquipos/backend/config/routes/api_platform.yaml).
-- **Conflicto de Validaciones y Query Parameters:** Se deshabilitó la introspección GraphQL y se activó el `validator` de Symfony manualmente en [framework.yaml](file:///c:/Users/Usuario/Documents/Pasantia/SisEquipos/backend/config/packages/framework.yaml) porque el framework minimalista carecía de servicios internos (ej. `query_parameter_validate`) que API Platform solicitaba por obligación para arrancar y esto crasheaba la consola.
-- **Compatibilidad del Analizador de Documentación:** Hubo incompatibilidades con `symfony/property-info` versión 6 que no soportaba la versión 6 de `phpdocumentor`. Efectuamos *downgrades* precisos y seguros de las librerías `phpdocumentor/reflection-docblock` y `phpdocumentor/type-resolver` con Composer hacia las versiones correctas que restauraron la compatibilidad mutua.
-- **Intelephense (Falsos Positivos VS Code):** Se modificó tu archivo [.vscode/settings.json](file:///c:/Users/Usuario/Documents/Pasantia/SisEquipos/backend/.vscode/settings.json) para indicarle al analizador de código de la IDE que ignorara la carpeta `vendor`, silenciando más de cien errores "fantasma".
+Para el desarrollo de este sistema se optó por un stack tecnológico moderno y ampliamente respaldado por la industria. El backend fue construido sobre **Symfony 6.4**, un framework PHP de largo soporte (LTS), utilizando **PHP 8.1.10** como lenguaje base y **Composer 2.8** como gestor de paquetes.
 
-## 6. Estado Actual del Software
-1. **Base de Datos:** Disponible, Relacionada e Íntegra.
-2. **CRUD API:** Totalmente operativo (Ruteo exitosamente validado con 88 Endpoints expuestos, incluyendo filtrados y métodos GET/POST/PUT/DELETE).
-3. **Seguridad Firewall:** Implementada y validada en modo JWT Stateless.
+La base de datos seleccionada fue **MySQL**, administrada mediante MySQL Workbench, con una instancia llamada `sis_equipos_cps` y credenciales locales de desarrollo bajo el usuario `root`.
 
-**Todo está compilado y listo para que las conexiones desde Frontends o Postman comiencen a consumir los datos y la lógica.**
+---
 
-## 7. Fase 2: Lógica de Negocio Avanzada
-Durante esta fase, comprobamos y nos aseguramos de la total automatización de la API gracias a **API Platform**:
-1. **Atributos `#[ApiResource]`**: Todo el inventario (`Equipo`, `Seccion`, `CategoriaEquipo`, etc.) ha sido expuesto con operaciones CRUD transaccionales completas (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`).
-2. **Cálculo de Vida Útil**: Se actualizó la lógica de la entidad `Equipo` agregando nuevas columnas y métodos virtuales calculados al vuelo por el Backend:
-   - Nuevo campo `vidaUtilMeses`.
-   - Fechas calculadas dinámicamente: `getFechaFinVidaUtil` (sumando meses a la fecha de adquisición).
-   - Discriminación y porcentajes: `isObsoleto` (booleano) y `getPorcentajeVidaUtilConsumido` (0 a 100%).
+## 2. Paquetes y Dependencias del Backend
 
-## 8. Fase 3: Iniciando Frontend en React
-Para el frontend que consumirá la API de Symfony de manera asíncrona, se ha avanzado rápidamente con la arquitectura central:
-1. **Configuración Inicial del Proyecto**: 
-   - Generación del esqueleto usando **Vite** + **React** + **TypeScript**. Esto asegura tiempos de carga y compilación casi nulos en el servidor de desarrollo en frío. 
-2. **Setup de Servicios y Autenticación Global (Global State)**:
-   - Implementado el **AuthContext** (`src/context/AuthContext.tsx`), que lee, almacena y decodifica localmente el Json Web Token usando `jwt-decode`.
-   - Cliente **Axios** en `src/services/api.ts` interceptando todas las peticiones salientes para inyectar automáticamente la cabecera `Authorization: Bearer <token>`, manejando respuestas nulas o caducadas y expulsando iterativamente al usuario si el token vence (Código 401).
-3. **Enrutamiento Protegido**:
-   - Vía `react-router-dom`, organizando rutas públicas (Pantalla Login) y privadas (`Layout` del Dashboard).
-4. **Diseño Visual e Interfaces (UI)**:
-   - Elaborado mediante Vanilla CSS moderno (`index.css`) sin dependencias externas pesadas.
-   - **Login.tsx**: Formulario diseñado, centrado, validado y responsivo, consumiendo directamente a través de un `POST` el endpoint `/api/login_check` originado en el Symfony.
-   - **Optimización del Dashboard**: Se integró Tailwind CSS v4 para construir un panel de métricas avanzado, utilizando `recharts` para gráficos de anillos y barras interactivas, e implementando consultas cacheadas mediante `@tanstack/react-query`.
-   - **Módulos de Inventario y Secciones**: Las pantallas faltantes del inventario se completaron (`Inventario.tsx` y `Secciones.tsx`), conectando tablas inteligentes, visualizadores dinámicos de vida útil de equipos, y componentes modulares de tarjetas para gestionar las ubicaciones. Todo consumiendo los endpoints de Doctrine.
-   - **Branding Institucional**: Se aplicó una capa de personalización completa sobre los CSS (tanto en Tailwind como variables nativas) extrayendo la identidad corporativa color Teal (#3e7365) del logotipo oficial de la Caja Petrolera de Salud, junto al logo dinámico en la Sidebar superior y los favicons del navegador.
+Se instalaron las siguientes librerías para cubrir las necesidades específicas del sistema:
 
-> **Hito Alcanzado:** La Fase 3 (Estructura y flujos básicos del FrontEnd) ha sido concluida al 100%. La aplicación reacciona en tiempo real a las métricas e inventarios de la Base de Datos.
+- **API Platform (v3.x):** Nos permitió generar de manera automática y completa todos los endpoints REST del sistema, evitando la escritura manual de controladores repetitivos.
+- **Doctrine ORM y Migrations:** Se encargan de traducir las entidades PHP directamente a tablas en MySQL, facilitando el versionado del esquema de la base de datos.
+- **Lexik JWT Authentication (v2.18):** Implementa el estándar de autenticación mediante JSON Web Tokens, garantizando conexiones seguras y sin estado (stateless).
+- **Nelmio CORS Bundle:** Configura los encabezados de acceso cruzado para permitir que el frontend (alojado en un origen distinto) se comunique sin restricciones con el backend.
+- **Symfony Maker Bundle:** Herramienta de desarrollo para generar rápidamente clases, comandos y controladores mediante la consola.
+- **Symfony Validator y Serializer:** Módulos de soporte para validar datos de entrada y transformar objetos PHP a formato JSON.
+
+---
+
+## 3. Diseño del Modelo de Datos
+
+Se realizó un análisis cuidadoso de los requerimientos del sistema, lo cual derivó en la creación de **13 entidades** que representan fielmente la estructura operativa de la organización:
+
+1. **Rol** — Define los niveles de acceso y jerarquía dentro del sistema.
+2. **Usuario** — Almacena las credenciales de acceso, incluyendo correo electrónico y contraseña cifrada, vinculada a un rol específico.
+3. **Sección** — Representa las ubicaciones físicas donde se distribuyen los equipos. Se modificó la arquitectura para que cada catálogo de "Sección" esté estrictamente **descentralizado y vinculado a un Centro médico específico**, impidiendo el cruce de datos entre diferentes hospitales.
+4. **Categoría de Equipo** — Clasifica los equipos por tipo, por ejemplo: computadoras, impresoras, servidores.
+5. **Estado de Equipo** — Refleja la condición actual de cada equipo: operativo, en reparación, dado de baja, etc.
+6. **Tipo de Componente** — Describe las categorías de piezas internas, como memorias RAM, discos duros o fuentes de poder.
+7. **Repuesto de Inventario** — Controla el stock disponible de componentes de repuesto.
+8. **Equipo** — Entidad central del sistema, enlazada a su sección, categoría y estado actual.
+9. **Componente de Equipo** — Registra qué piezas están instaladas actualmente dentro de cada equipo.
+10. **Foto de Equipo** — Galería de imágenes asociadas a los equipos para documentación visual.
+11. **Solicitud de Mantenimiento** — Permite a los usuarios reportar fallas o solicitar reparaciones sobre equipos específicos.
+12. **Historial de Mantenimiento** — Bitácora completa que documenta cada reparación realizada, con su informe técnico correspondiente.
+13. **Reemplazo de Componente** — Trazabilidad individual de cada repuesto consumido durante un mantenimiento, conectando el historial con el inventario.
+14. **Evidencia de Mantenimiento** — Soporte documental gráfico que permite adjuntar fotografías del antes y el después de una intervención técnica.
+
+Una vez definidas todas las entidades con sus relaciones, claves foráneas y restricciones, se ejecutó la migración de base de datos de forma exitosa, generando automáticamente las 14 tablas en MySQL con integridad referencial completa.
+
+---
+
+## 4. Seguridad y Autenticación JWT
+
+### Generación de Llaves Criptográficas
+
+El primer desafío fue generar las llaves RSA necesarias para la firma de tokens JWT. El entorno de Windows con Laragon no disponía de OpenSSL accesible directamente desde PowerShell, por lo que se elaboró un script PHP personalizado que invocó el binario de OpenSSL incluido en Laragon, utilizando su archivo de configuración `openssl.cnf`. Esto permitió generar exitosamente los archivos `private.pem` y `public.pem` requeridos por Lexik JWT.
+
+### Endpoint de Login
+
+Se configuró el punto de acceso `/api/login_check` mediante los archivos `routes.yaml` y `security.yaml`. El endpoint acepta peticiones POST con un cuerpo JSON que contiene los campos `email` y `password`, devolviendo un token JWT válido cuando las credenciales son correctas.
+
+### Protección de Datos Sensibles
+
+Se implementaron grupos de serialización en la entidad `Usuario` para controlar qué campos se exponen en las respuestas de la API. Gracias a esta configuración, las contraseñas cifradas nunca son devueltas al consultar usuarios, eliminando un riesgo de seguridad común.
+
+### Creación del Usuario Administrador
+
+Dado que las contraseñas se almacenan mediante hash unidireccional (BCrypt/Sodium), no es posible crear usuarios directamente en la base de datos. Se desarrolló un comando personalizado de consola (`php bin/console app:create-admin`) que genera un superusuario de forma segura. Las credenciales del administrador por defecto son:
+
+- **Correo:** `admin@cps.gob.bo`
+- **Contraseña:** `admin123`
+
+--- 
+
+## 5. Resolución de Problemas y Depuración
+
+La integración de Symfony 6.4 con API Platform v3 y Lexik JWT presentó varios desafíos técnicos que fueron resueltos de manera progresiva:
+
+- **Conflicto entre JWT y API Platform v3:** API Platform v3 introdujo configuraciones que entraban en conflicto directo con la carga de rutas de Lexik JWT, generando errores al intentar compilar el contenedor de servicios. Se implementó un parche temporal mediante un script PHP que intercepta y corrige la configuración antes de que Symfony la procese, además de ajustes en `api_platform.yaml` para aliviar la carga.
+
+- **Fallo en la validación de parámetros de consulta:** El framework base de Symfony 6.4 no incluía ciertos servicios internos que API Platform requería para validar parámetros de consulta (query parameters). Se solucionó deshabilitando temporalmente la introspección GraphQL y habilitando manualmente el validador de Symfony en `framework.yaml`.
+
+- **Incompatibilidad de versiones en documentación de APIs:** La versión 6 de `symfony/property-info` no era compatible con la versión 6 de `phpdocumentor/reflection-docblock`, lo cual impedía la generación de la documentación automática. Se realizaron ajustes precisos en las versiones de las dependencias mediante Composer, bajando `phpdocumentor/reflection-docblock` a la versión `^5.2` para restaurar la compatibilidad.
+
+- **Errores falsos en VS Code (Intelephense):** El analizador de código de Visual Studio Code mostraba más de cien errores fantasma al escanear la carpeta `vendor`. Se modificó el archivo `.vscode/settings.json` para excluir dicha carpeta del análisis, limpiando significativamente la experiencia de desarrollo.
+
+---
+
+## 6. Estado Actual del Backend
+
+A la fecha de este informe, el backend se encuentra en un estado completamente funcional:
+
+- La base de datos está operativa, con todas las relaciones configuradas y los datos íntegros.
+- La API RESTful expone **88 endpoints** que cubren todas las operaciones CRUD (crear, leer, actualizar, eliminar) sobre cada entidad, incluyendo filtrado, paginación y búsqueda.
+- El sistema de seguridad mediante JWT está implementado y validado en modo stateless, protegiendo todos los recursos salvo la ruta de autenticación pública.
+
+El backend está listo para ser consumido por cualquier cliente HTTP, ya sea una aplicación frontend, herramientas como Postman, o servicios de terceros.
+
+---
+
+## 7. Lógica de Negocio Avanzada
+
+Más allá de las operaciones básicas de lectura y escritura, se incorporaron reglas de negocio específicas en la entidad `Equipo` para proporcionar inteligencia operativa:
+
+- **Campo de vida útil:** Se añadió el campo `vidaUtilMeses` para registrar la duración esperada de cada equipo.
+- **Fecha de fin de vida útil:** El método `getFechaFinVidaUtil()` calcula dinámicamente cuándo expira la vida útil de un equipo, sumando los meses de vida útil a la fecha de adquisición.
+- **Detección de equipos obsoletos:** El método `isObsoleto()` devuelve verdadero si la fecha actual supera la fecha de fin de vida útil, permitiendo identificar rápidamente qué equipos necesitan reemplazo.
+- **Porcentaje de vida consumida:** El método `getPorcentajeVidaUtilConsumido()` calcula un valor entre 0% y 100% que indica cuánto de la vida útil del equipo ya ha transcurrido, útil para generar alertas preventivas.
+
+---
+
+## 8. Desarrollo del Frontend en React
+
+### Configuración del Proyecto
+
+El frontend fue inicializado utilizando **Vite** como empaquetador, **React 19** como biblioteca de interfaz y **TypeScript** como lenguaje. Esta combinación garantiza tiempos de compilación y recarga en caliente extremadamente rápidos durante el desarrollo.
+
+### Sistema de Autenticación
+
+Se implementó un contexto global de autenticación (`AuthContext`) que se encarga de:
+
+- Leer el token JWT almacenado en el navegador al iniciar la aplicación.
+- Decodificar el token usando la librería `jwt-decode` para extraer la información del usuario (correo y roles).
+- Detectar automáticamente si el token ha expirado y cerrar la sesión si es necesario.
+
+### Cliente HTTP con Axios
+
+Se configuró una instancia centralizada de Axios (`api.ts`) que intercepta todas las peticiones HTTP para:
+
+- Inyectar automáticamente la cabecera `Authorization: Bearer <token>` en cada solicitud.
+- Detectar respuestas con código 401 (token expirado) y redirigir al usuario a la pantalla de login de forma transparente.
+
+### Enrutamiento y Protección de Vistas
+
+Mediante `react-router-dom`, se organizó la navegación en rutas públicas (pantalla de login) y rutas privadas (dashboard, inventario, secciones). Cualquier intento de acceder a una ruta protegida sin autenticación redirige automáticamente al login.
+
+### Diseño Visual y Componentes
+
+- **Login:** Formulario centrado, responsivo y validado que consume directamente el endpoint `/api/login_check` del backend Symfony.
+- **Dashboard:** Panel de métricas en tiempo real que utiliza `recharts` para renderizar gráficos de barras y gráficos circulares, mostrando estadísticas como el total de equipos, mantenimientos por mes, solicitudes pendientes y costo total de reparaciones. Las consultas están optimizadas mediante `@tanstack/react-query` para cachear respuestas y evitar peticiones innecesarias.
+- **Inventario:** Tabla dinámica con búsqueda por nombre o código de inventario, barras de progreso que indican el porcentaje de vida útil consumida por cada equipo, y acciones de edición y eliminación.
+- **Secciones:** Módulo para gestionar las ubicaciones físicas donde se distribuyen los equipos, con visualización en formato de tarjetas.
+- **Branding Institucional:** Se aplicó la identidad visual de la Caja Petrolera de Salud, utilizando el color corporativo teal (#3e7365) como color primario, el logotipo oficial en la barra lateral y tipografía coherente en toda la aplicación. El frontend utiliza una combinación de Tailwind CSS v4 para los componentes del dashboard y variables CSS personalizadas para el resto de la interfaz.
+
+---
+
+## 9. Módulo de Mantenimiento y Control de Roles
+
+Durante las últimas fases del desarrollo, se priorizó la finalización del módulo de mantenimiento, que es el núcleo operativo del sistema, junto con un robusto control de accesos:
+
+- **Flujo de Mantenimiento:** Se implementó un ciclo de vida completo para los tickets de soporte, desde la creación de una "Solicitud de Mantenimiento" hasta la finalización en un "Historial de Mantenimiento". Los usuarios pueden interactuar con interfaces dinámicas que muestran detalles técnicos e información del solicitante.
+- **Mantenimiento Directo:** Se añadió un flujo de "Mantenimiento Directo" para permitir a los técnicos registrar intervenciones rápidas sin necesidad de un ticket previo.
+- **Soporte de Evidencias Fotográficas (Base64):** Se configuraron las entidades (`EvidenciaMantenimiento`) para soportar tipos de dato `LONGTEXT` en la base de datos MySQL, lo que permitió procesar y guardar imágenes y fotografías ("antes y después" de la reparación) decodificadas directamente en flujos Base64 desde el frontend, evitando la sobrecarga de un servidor de archivos externo.
+- **Gestión Rigurosa de Stock e Inventario:** Se ajustó la lógica transaccional para que, al momento de cerrar un mantenimiento con uso de repuestos, el sistema realice un precálculo asegurando que haya stock disponible y deduzca de manera exacta matemáticamente la cantidad usada de la tabla `Repuesto`.
+- **Resolución de Conflictos de Relación de Entidades:** Se repararon errores de integridad de base de datos (relaciones `OneToOne`) al registrar reemplazos y generar mantenimientos múltiples desde una misma solicitud, reutilizando los historiales existentes inteligentemente en vez de forzar inserciones duplicadas.
+- **Generación de Reportes:** Se integró la capacidad de generar informes diagnósticos imprimibles directamente desde el panel de tickets, mejorando la trazabilidad documental de cada reparación técnica.
+- **Gestión de Roles y Permisos:** Se perfeccionó el control de acceso en la aplicación. El sistema ahora distingue entre "SuperUsuarios" (acceso completo) y "Usuarios Estándar" (limitados según su ubicación de trabajo). Las vistas de Administración se han restringido para proteger la información sensible.
+
+---
+
+## 10. Despliegue en Producción e Integración Final
+
+El proyecto superó la fase local y se preparó para el entorno de producción de la institución:
+
+- **Configuración de Servidor y Subdirectorios:** Para alojar el frontend dentro de un dominio institucional, se configuraron reglas precisas en el servidor Apache para servir desde el subdirectorio `/ecomcb/`. Esto implicó sincronizar las configuraciones de Vite y React Router (`basename`) para evitar problemas de enrutamiento y pantallas en blanco.
+- **Integridad de Transacciones en la API:** Durante las pruebas en vivo del módulo de mantenimiento, se corrigieron bugs relacionados con la actualización de estados de los tickets. La interacción HTTP se refactorizó de peticiones `PUT` a peticiones `PATCH` específicas, asegurando la no sobrescritura accidental de datos y garantizando actualizaciones parciales 100% íntegras.
+- **Optimización de Interfaz:** Se aplicaron filtros avanzados e interactivos para la visualización de los equipos, junto con modal expandibles para los historiales, garantizando rapidez y claridad visual en procesos con alto volumen de información.
+
+---
+
+## 11. Normalización de Datos Masivos y Limpieza de Inventario
+
+Uno de los hitos más importantes para la estabilización del sistema fue la normalización de la base de datos heredada. El registro inicial constaba de más de 1,400 activos importados donde la columna `nombre` almacenaba información redundante y desestructurada (mezclando nombre semántico, marca, modelo, número de serie y especificaciones internas como la RAM o el CPU).
+
+Para resolver este desafío sin comprometer la integridad del parque de equipos:
+- **Scripts de Extracción (CLI):** Se diseñaron comandos personalizados de la consola de Symfony (`app:extraer-modelos`, `app:extraer-marcas`, `app:extraer-componentes`) que utilizaron expresiones regulares avanzadas para recorrer toda la base de datos.
+- **Poblado Relacional:** La información técnica (CPU, RAM, Disco Duro) extraída del texto plano fue poblada automáticamente como registros individuales dentro de la entidad `ComponenteEquipo`.
+- **Limpieza de Redundancias:** Un comando final (`app:limpiar-nombres`) se encargó de expurgar los textos redundantes (por ejemplo, removiendo la marca "INTEL" o el modelo "CORE I3" del nombre del activo), garantizando que columnas específicas como Marca, Modelo y Serie tomaran la responsabilidad de esos datos.
+- **Mejoras de Tipado:** En paralelo, se refinaron las interfaces de TypeScript en React para manejar correctamente los valores nulos (`null`) resultantes de la normalización, evitando errores del compilador y caídas en la renderización del catálogo.
+
+Esto dejó una tabla de interfaz gráfica limpia, profesional y libre de información duplicada visualmente.
+
+---
+
+## Conclusión
+
+El proyecto SisEquipos ha evolucionado exitosamente desde la concepción del modelo de datos hasta convertirse en una plataforma integral estable, desplegada en un entorno de producción funcional. El backend ofrece seguridad robusta mediante JWT, control de acceso granular y una sólida lógica de negocio. El frontend, por su parte, entrega una experiencia moderna, en sintonía con la identidad de la institución, fluida e intuitiva. 
+
+Con los módulos de mantenimiento activos, una base de código preparada para escalar y los problemas técnicos de infraestructura resueltos, el sistema cumple su propósito fundacional: proporcionar a la Caja Petrolera de Salud una herramienta efectiva, moderna y segura para el seguimiento integral de su parque de activos informáticos y equipos médicos.
+
+---
+
+*Documento actualizado y elaborado como parte del proceso de pasantía — Caja Petrolera de Salud.*
