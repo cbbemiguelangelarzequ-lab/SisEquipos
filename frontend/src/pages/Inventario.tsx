@@ -1,10 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { api } from '../services/api';
 import { getUserInfo } from '../services/auth';
-import { Archive, Plus, Search, Edit3, Trash2, X, Cpu, Settings2, Eye, FileText } from 'lucide-react';
+import { Archive, Plus, Search, Edit3, Trash2, X, Cpu, Settings2, Eye, FileText, AlertTriangle, Printer, ArrowRight } from 'lucide-react';
 import { ConfirmDeleteModal } from '../components/ConfirmDeleteModal';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 
 interface Equipo {
   id: number;
@@ -24,13 +22,11 @@ interface Equipo {
   observaciones?: string | null;
 }
 
-/**
- * Vida útil base realista por categoría (en meses):
- * - Computadoras/Monitores/Impresoras: 120 meses (10 años)
- * - Equipos médicos/especializados: 144 meses (12 años)
- * - Teléfonos/Móviles: 60 meses (5 años)
- * - Genérico: 96 meses (8 años)
- */
+// Vida útil base realista por categoría (en meses):
+// - Computadoras/Monitores/Impresoras: 120 meses (10 años)
+// - Equipos médicos/especializados: 144 meses (12 años)
+// - Teléfonos/Móviles: 60 meses (5 años)
+// - Genérico: 96 meses (8 años)
 const BASE_VIDA_POR_CATEGORIA: Record<string, number> = {
   'computadora': 120,
   'laptop': 120,
@@ -65,7 +61,7 @@ const calcularVidaUtil = (
   return Math.min(base + bonoMantenimiento + bonoRepuestos, Math.round(base * 1.5)); // máx. 50% extra
 };
 
-/** Devuelve el porcentaje de vida útil consumida (puede superar 100% si es obsoleto) */
+// /** Devuelve el porcentaje de vida útil consumida (puede superar 100% si es obsoleto) */
 const calcularDesgaste = (fechaAdquisicion: string | null, vidaUtilMeses: number | null) => {
   if (!fechaAdquisicion || !vidaUtilMeses) return null;
   const inicio = new Date(fechaAdquisicion).getTime();
@@ -75,7 +71,7 @@ const calcularDesgaste = (fechaAdquisicion: string | null, vidaUtilMeses: number
   return Math.round((mesesTranscurridos / vidaUtilMeses) * 100);
 };
 
-/** Años transcurridos desde la fecha de adquisición */
+// /** Años transcurridos desde la fecha de adquisición */
 const calcularAnosUso = (fechaAdquisicion: string | null): number | null => {
   if (!fechaAdquisicion) return null;
   const inicio = new Date(fechaAdquisicion).getTime();
@@ -85,6 +81,8 @@ const calcularAnosUso = (fechaAdquisicion: string | null): number | null => {
 export const Inventario = () => {
   const [equipos, setEquipos] = useState<Equipo[]>([]);
   const [loading, setLoading] = useState(true);
+  const [exportingPDF, setExportingPDF] = useState(false);
+  const [confirmPDFModal, setConfirmPDFModal] = useState<{isOpen: boolean, totalEquipos: number}>({ isOpen: false, totalEquipos: 0 });
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -96,6 +94,9 @@ export const Inventario = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [detalleEquipo, setDetalleEquipo] = useState<Equipo | null>(null);
+  const [equipoTransfers, setEquipoTransfers] = useState<any[]>([]);
+  const [loadingTransfers, setLoadingTransfers] = useState(false);
+  const [exportingFicha, setExportingFicha] = useState(false);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
     id: null as number | null,
@@ -130,6 +131,18 @@ export const Inventario = () => {
     fetchEquipos();
     fetchMaestros();
   }, []);
+
+  useEffect(() => {
+    if (detalleEquipo) {
+      setLoadingTransfers(true);
+      api.get(`/transferencia_items?equipo=/api/equipos/${detalleEquipo.id}`)
+        .then(res => setEquipoTransfers(res.data['hydra:member'] || res.data || []))
+        .catch(err => console.error('Error cargando transferencias', err))
+        .finally(() => setLoadingTransfers(false));
+    } else {
+      setEquipoTransfers([]);
+    }
+  }, [detalleEquipo]);
 
   const fetchEquipos = async () => {
     try {
@@ -366,47 +379,78 @@ export const Inventario = () => {
 
   const user = getUserInfo();
 
-  const handleExportPDF = () => {
+  const MAX_PDF_EQUIPOS = 500;
+
+  // Ejecuta la generación del PDF (puede venir del botón directo o del modal de confirmación)
+  const ejecutarExportPDF = async (ids: number[]) => {
+    setConfirmPDFModal({ isOpen: false, totalEquipos: 0 });
+    setExportingPDF(true);
     try {
-      const doc = new jsPDF({ orientation: 'landscape' });
-
-      doc.setFontSize(18);
-      doc.setTextColor(30, 64, 175);
-      doc.text('Caja Petrolera de Salud - Reporte de Inventario', 14, 22);
-
-      doc.setFontSize(11);
-      doc.setTextColor(100);
-      const dateStr = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-      doc.text(`Generado: ${dateStr} - Total listado: ${filteredEquipos.length} equipos`, 14, 30);
-      if (searchTerm) {
-        doc.text(`Filtro aplicado: "${searchTerm}"`, 14, 36);
-      }
-
-      const tableColumn = ["Código", "Nombre del Equipo", "Marca/Modelo", "Serie", "Categoría", "Centro / Sección", "Estado"];
-      const tableRows = filteredEquipos.map(eq => [
-        eq.codigoInventario || '-',
-        eq.nombre || '-',
-        `${eq.marca || '-'} / ${eq.modelo || '-'}`,
-        eq.numeroSerie || '-',
-        eq.categoria?.nombre || '-',
-        `${eq.centro?.nombre?.split(' ')[0] || 'Gen.'} - ${eq.seccion?.nombre || 'Gral.'}`,
-        eq.estado?.nombre || '-'
-      ]);
-
-      autoTable(doc, {
-        head: [tableColumn],
-        body: tableRows,
-        startY: searchTerm ? 42 : 36,
-        theme: 'grid',
-        styles: { fontSize: 8, cellPadding: 2, textColor: [51, 65, 85] },
-        headStyles: { fillColor: [15, 118, 110], textColor: [255, 255, 255], fontStyle: 'bold' },
-        alternateRowStyles: { fillColor: [248, 250, 252] },
+      const response = await api.post('/reportes/inventario', {
+        equipos: ids,
+        searchTerm: searchTerm
+      }, {
+        responseType: 'blob',
+        timeout: 60000
       });
 
-      doc.save(`Inventario_CPS_${new Date().toISOString().slice(0, 10)}.pdf`);
-    } catch (err) {
-      console.error("Error generating PDF:", err);
-      alert("Hubo un error al generar el PDF. Revisa la consola.");
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'inventario_equipos.pdf';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => window.URL.revokeObjectURL(url), 5000);
+    } catch (error: any) {
+      console.error(error);
+      const msg = error.response?.data?.detail
+        || error.response?.data?.['hydra:description']
+        || error.response?.data?.message
+        || (error.code === 'ECONNABORTED' ? 'El servidor tardó demasiado. Intenta filtrar menos equipos.' : null)
+        || (error.response ? `Error ${error.response.status}` : error.message);
+      alert(`Error al exportar PDF: ${msg}`);
+    } finally {
+      setExportingPDF(false);
+    }
+  };
+
+  const handleExportPDF = () => {
+    if (exportingPDF) return;
+    const equiposIds = filteredEquipos.map((e: any) => e.id);
+    if (equiposIds.length > MAX_PDF_EQUIPOS) {
+      setConfirmPDFModal({ isOpen: true, totalEquipos: equiposIds.length });
+    } else {
+      ejecutarExportPDF(equiposIds);
+    }
+  };
+
+  const handleExportFichaTecnica = async (id: number) => {
+    if (exportingFicha) return;
+    setExportingFicha(true);
+    try {
+      const response = await api.get(`/reportes/equipo/${id}/ficha-tecnica`, {
+        responseType: 'blob',
+        timeout: 60000
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ficha_tecnica_equipo_${id}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => window.URL.revokeObjectURL(url), 5000);
+    } catch (error: any) {
+      console.error(error);
+      const msg = error.response?.data?.detail
+        || error.response?.data?.['hydra:description']
+        || error.response?.data?.message
+        || (error.response ? `Error ${error.response.status}` : error.message);
+      alert(`Error al generar la ficha técnica: ${msg}`);
+    } finally {
+      setExportingFicha(false);
     }
   };
 
@@ -425,10 +469,18 @@ export const Inventario = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={handleExportPDF}
-            className="bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-brand-700 px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-sm transition-all"
-            title="Exportar a PDF"
+            disabled={exportingPDF}
+            className="bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-brand-700 px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-sm transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+            title={exportingPDF ? 'Generando PDF...' : 'Exportar a PDF'}
           >
-            <FileText size={20} /> <span className="hidden sm:inline">Exportar PDF</span>
+            {exportingPDF ? (
+              <svg className="animate-spin" width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" strokeLinecap="round"/>
+              </svg>
+            ) : (
+              <FileText size={20} />
+            )}
+            <span className="hidden sm:inline">{exportingPDF ? 'Generando...' : 'Exportar PDF'}</span>
           </button>
           <button
             className="bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-sm transition-all hover:shadow-md"
@@ -629,11 +681,11 @@ export const Inventario = () => {
                     <label className="block text-sm font-semibold text-slate-700 mb-1">Sección</label>
                     <select name="seccion" value={formData.seccion} onChange={handleInputChange} required className="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl outline-none focus:border-brand-500 text-slate-800">
                       <option value="">Seleccionar</option>
-                      {secciones.filter(s => {
+                      {[...secciones].filter(s => {
                         if (!formData.centro) return true;
                         const sCentroId = typeof s.centro === 'object' ? s.centro?.id : (typeof s.centro === 'string' ? s.centro.split('/').pop() : s.centro);
                         return sCentroId?.toString() === formData.centro.toString();
-                      }).map(s => <option key={s.id} value={s.id}>{s.nombre}</option>)}
+                      }).sort((a, b) => a.nombre.localeCompare(b.nombre)).map(s => <option key={s.id} value={s.id}>{s.nombre}</option>)}
                     </select>
                   </div>
                   <div>
@@ -647,7 +699,7 @@ export const Inventario = () => {
                     <label className="block text-sm font-semibold text-slate-700 mb-1">Estado Físico</label>
                     <select name="estado" value={formData.estado} onChange={handleInputChange} required className="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl outline-none focus:border-brand-500 text-slate-800">
                       <option value="">Seleccionar</option>
-                      {estados.map(e => <option key={e.id} value={e.id}>{e.nombre}</option>)}
+                      {[...estados].sort((a, b) => a.nombre.localeCompare(b.nombre)).map(e => <option key={e.id} value={e.id}>{e.nombre}</option>)}
                     </select>
                   </div>
                 </div>
@@ -762,12 +814,48 @@ export const Inventario = () => {
                 <div><span className="text-slate-400 font-semibold block text-xs uppercase">Centro / Sección</span><span className="text-slate-800 tracking-tight">{detalleEquipo.centro?.nombre || 'Global'} / {detalleEquipo.seccion?.nombre || 'General'}</span></div>
                 <div><span className="text-slate-400 font-semibold block text-xs uppercase">Fecha Adquisición</span><span className="text-slate-800">{detalleEquipo.fechaAdquisicion ? new Date(detalleEquipo.fechaAdquisicion).toLocaleDateString() : '-'}</span></div>
               </div>
-              <div className="pt-2 border-t border-slate-100">
+
+              <div className="pt-4 border-t border-slate-100">
+                <span className="text-slate-400 font-semibold block text-xs uppercase mb-2">Historial de Transferencias</span>
+                {loadingTransfers ? (
+                  <p className="text-xs text-slate-400 italic">Cargando transferencias...</p>
+                ) : equipoTransfers.length > 0 ? (
+                  <div className="space-y-2 max-h-32 overflow-y-auto pr-2">
+                    {equipoTransfers.map((t: any) => {
+                      const origen = t.transferencia?.centroOrigen?.nombre || t.transferencia?.seccionOrigen?.nombre || 'Origen Desconocido';
+                      const destino = t.transferencia?.centroDestino?.nombre || t.transferencia?.seccionDestino?.nombre || 'Destino Desconocido';
+                      const fecha = t.transferencia?.fechaTransferencia || t.transferencia?.fechaSolicitud;
+                      return (
+                        <div key={t.id} className="bg-slate-50 border border-slate-100 p-2.5 rounded-lg text-sm">
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="text-xs font-bold text-slate-500">{fecha ? new Date(fecha).toLocaleDateString() : 'Sin Fecha'}</span>
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${t.transferencia?.estado === 'Completada' ? 'bg-emerald-100 text-emerald-700' : t.transferencia?.estado === 'Pendiente' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'}`}>
+                              {t.transferencia?.estado || 'Desconocido'}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 text-slate-700 font-medium">
+                            <span className="truncate flex-1" title={origen}>{origen}</span>
+                            <ArrowRight size={14} className="text-slate-400 flex-shrink-0" />
+                            <span className="truncate flex-1" title={destino}>{destino}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-xs text-slate-400 italic">El equipo no registra transferencias.</p>
+                )}
+              </div>
+
+              <div className="pt-4 border-t border-slate-100">
                 <span className="text-slate-400 font-semibold block text-xs uppercase mb-1">Observaciones</span>
                 <p className="text-slate-600 text-sm whitespace-pre-wrap">{detalleEquipo.observaciones || 'Sin observaciones.'}</p>
               </div>
             </div>
-            <div className="flex justify-end px-6 py-4 border-t border-slate-100 bg-slate-50">
+            <div className="flex justify-between items-center px-6 py-4 border-t border-slate-100 bg-slate-50">
+              <button onClick={() => handleExportFichaTecnica(detalleEquipo.id)} disabled={exportingFicha} className="text-brand-600 hover:text-brand-800 bg-white border border-slate-200 shadow-sm px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-colors disabled:opacity-50">
+                <Printer size={16} /> {exportingFicha ? 'Generando...' : 'Imprimir Ficha Técnica'}
+              </button>
               <button onClick={() => setDetalleEquipo(null)} className="px-5 py-2 font-bold text-slate-500 hover:bg-slate-200 rounded-xl transition-colors">Cerrar</button>
             </div>
           </div>
@@ -798,6 +886,69 @@ export const Inventario = () => {
         }}
       />
 
+      {/* Modal de confirmación para exportar PDF con muchos equipos */}
+      {confirmPDFModal.isOpen && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-[9999] fade-in">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden relative">
+            <button
+              onClick={() => setConfirmPDFModal({ isOpen: false, totalEquipos: 0 })}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 bg-white rounded-full p-1 transition-colors"
+            >
+              <X size={20} />
+            </button>
+            <div className="p-6 pt-8 text-center">
+              <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-amber-50">
+                <AlertTriangle size={32} />
+              </div>
+              <h2 className="text-xl font-bold text-slate-800 mb-2">Reporte extenso</h2>
+              <p className="text-slate-500 text-sm leading-relaxed mb-2">
+                El catálogo actual tiene <strong className="text-slate-700">{confirmPDFModal.totalEquipos} equipos</strong>.
+                El PDF incluirá solo los primeros <strong className="text-slate-700">{MAX_PDF_EQUIPOS}</strong>.
+              </p>
+              <p className="text-slate-400 text-xs mb-6">
+                Usa el buscador para filtrar y exportar grupos más pequeños.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setConfirmPDFModal({ isOpen: false, totalEquipos: 0 })}
+                  className="flex-1 px-4 py-2.5 font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={() => ejecutarExportPDF(filteredEquipos.map((e: any) => e.id))}
+                  className="flex-1 px-4 py-2.5 font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-sm"
+                >
+                  <FileText size={18} /> Continuar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <ConfirmDeleteModal
+        isOpen={deleteModalState.isOpen}
+        title="Eliminar Equipo"
+        message="¿Estás seguro de que deseas eliminar este equipo del inventario de forma permanente? Esta acción no se puede deshacer."
+        isDeleting={deleteModalState.isLoading}
+        onCancel={() => setDeleteModalState(prev => ({...prev, isOpen: false}))}
+        onConfirm={async () => {
+          setDeleteModalState(prev => ({...prev, isLoading: true}));
+          try {
+            await api.delete(`/equipos/${deleteModalState.id}`);
+            fetchEquipos();
+            setDeleteModalState(prev => ({...prev, isOpen: false, isLoading: false}));
+          } catch (error) {
+            console.error(error);
+            alert('Error al eliminar el equipo. Puede que tenga historiales o tickets asociados.');
+            setDeleteModalState(prev => ({...prev, isLoading: false}));
+          }
+        }}
+      />
+
     </div>
   );
 };
+
+

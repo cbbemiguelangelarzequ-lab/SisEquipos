@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Informe de Mantenimiento</title>
+    <style>
+        @page { size: letter portrait; margin: 30px; }
+        body { font-family: 'Times New Roman', Times, serif; color: #000; margin: 0; box-sizing: border-box; }
+        table { width: 100%; border-collapse: collapse; }
+        
+        .header-table { width: 100%; margin-bottom: 5px; }
+        .logo-box { border: 2px solid #00605A; padding: 10px; text-align: center; color: #00605A; width: 80px; font-family: sans-serif; border-radius: 5px; }
+        .logo-text { font-size: 32px; font-weight: bold; line-height: 1; letter-spacing: -1px; }
+        .title-text { 
+            font-size: 34px; 
+            color: #fff;
+            text-shadow: -1px -1px 0 #00605A, 1px -1px 0 #00605A, -1px 1px 0 #00605A, 1px 1px 0 #00605A;
+            text-transform: lowercase; 
+            font-family: 'Arial Black', sans-serif; 
+            letter-spacing: 1px; 
+            padding-left: 20px; 
+            vertical-align: bottom;
+            padding-bottom: 5px;
+        }
+        
+        .divider { height: 3px; background-color: #00605A; width: 100%; margin-bottom: 10px; }
+        .main-title { font-size: 20px; font-weight: bold; font-style: italic; text-transform: uppercase; margin-bottom: 20px; text-align: center; letter-spacing: 1px; }
+        
+        .layout-table { width: 100%; }
+        .left-col { width: 22%; vertical-align: top; font-family: sans-serif; font-size: 11px; color: #00605A; font-weight: bold; }
+        .left-col p { margin: 0 0 20px 0; line-height: 1.4; }
+        .right-col { width: 78%; vertical-align: top; padding-left: 25px; }
+        
+        .info-table { border-collapse: collapse; margin-bottom: 20px; font-family: 'Times New Roman', Times, serif; font-size: 13px; font-weight: bold; width: 100%; }
+        .info-table td { padding: 6px 10px; border-bottom: 1px solid #000; }
+        .info-table td.label { width: 25%; text-align: right; border-bottom: none; }
+        .info-table td.input-bg { background-color: #E8F0FE; font-family: sans-serif; font-weight: normal; border-bottom: 1px solid #fff; }
+        
+        .section-title { font-size: 14px; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; font-family: 'Times New Roman', Times, serif; }
+        .main-table { width: 100%; border-collapse: collapse; border: 2px solid #000; margin-bottom: 20px; font-family: 'Times New Roman', Times, serif; font-size: 12px; font-weight: bold; }
+        .main-table th, .main-table td { border: 1px solid #000; padding: 8px; text-align: center; }
+        .main-table td.input-bg { background-color: #E8F0FE; font-family: sans-serif; font-weight: normal; }
+        .main-table td.desc-row { text-align: left; background-color: #fff; padding-top: 10px; }
+        
+        .action-box { border: 2px solid #000; padding: 10px; min-height: 80px; font-family: sans-serif; font-size: 12px; margin-bottom: 20px; background-color: #E8F0FE; }
+        
+        .footer { margin-top: 40px; font-size: 11px; font-family: sans-serif; color: #000; text-align: left; }
+        .footer-stamp { text-align: center; margin-top: 30px; font-style: italic; color: #666; }
+    </style>
+</head>
+<body>
+
+<table class="header-table">
+    <tr>
+        <td style="width: 100px;">
+            <div class="logo-box">
+                <div class="logo-text">CPS</div>
+            </div>
+        </td>
+        <td class="title-text">
+            caja petrolera de salud
+        </td>
+    </tr>
+</table>
+<div class="divider"></div>
+
+<div class="main-title">INFORME DE MANTENIMIENTO CONCLUIDO</div>
+
+<table class="layout-table">
+    <tr>
+        <td class="left-col">
+            <p>DEPARTAMENTO DE<br>MANTENIMIENTO</p>
+            <p>DEPARTAMENTAL<br>COCHABAMBA</p>
+            <p style="font-weight: normal;">
+                <strong style="font-weight: bold;">TELÉFONOS</strong><br>
+                Gral. Achá<br>
+                Int. 124<br>
+                VoIP 4006<br><br>
+                Policlínico<br>
+                Int. 245<br>
+                VoIP 4053
+            </p>
+        </td>
+        <td class="right-col">
+            <table class="info-table">
+                <tr>
+                    <td class="label">TICKET:</td>
+                    <td class="input-bg">
+                        {% if historial.solicitud %}
+                            TKT-{{ '%04d'|format(historial.solicitud.id) }}
+                        {% else %}
+                            Directo
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">FECHA:</td>
+                    <td class="input-bg">{{ historial.fechaMantenimiento ? historial.fechaMantenimiento|date('d/m/Y') : '-' }}</td>
+                </tr>
+                <tr>
+                    <td class="label">TÉCNICO:</td>
+                    <td class="input-bg">{{ historial.tecnico ? (historial.tecnico.nombre ?: historial.tecnico.email) : '-' }}</td>
+                </tr>
+            </table>
+            
+            <div class="section-title">DATOS DEL EQUIPO:</div>
+            <table class="main-table">
+                <tr>
+                    <th>CÓDIGO INV.</th>
+                    <th>SERIE</th>
+                    <th>MARCA / MODELO</th>
+                    <th>SECCIÓN / UBICACIÓN</th>
+                </tr>
+                <tr>
+                    <td class="input-bg">{{ equipo ? equipo.codigoInventario : '-' }}</td>
+                    <td class="input-bg">{{ equipo ? equipo.numeroSerie : '-' }}</td>
+                    <td class="input-bg">{{ equipo ? equipo.marca : '-' }} / {{ equipo ? equipo.modelo : '-' }}</td>
+                    <td class="input-bg">{{ equipo and equipo.seccion ? equipo.seccion.nombre : '-' }}</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="desc-row">
+                        <strong>DESCRIPCIÓN:</strong> <span style="font-family: sans-serif; font-weight: normal; margin-left: 10px;">{{ equipo ? equipo.nombre : '-' }}</span>
+                    </td>
+                </tr>
+            </table>
+            
+            <div class="section-title">TRABAJO REALIZADO:</div>
+            <div class="action-box">
+                {{ historial.accionRealizada|default('Sin descripción') }}
+            </div>
+            
+            <table class="main-table">
+                <tr>
+                    <th>COSTO DEL COMPONENTE</th>
+                    <th>ESTADO RESULTANTE</th>
+                </tr>
+                <tr>
+                    <td class="input-bg">Bs. {{ historial.costo|default('0.00') }}</td>
+                    <td class="input-bg">{{ historial.estadoEquipoResultante ? historial.estadoEquipoResultante.nombre : '-' }}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<div class="footer">
+    <p><strong>NOTA:</strong> Este informe certifica que los trabajos de mantenimiento detallados han sido concluidos satisfactoriamente.</p>
+    <p class="footer-stamp">SisEquipos &mdash; Caja Petrolera de Salud &mdash; Impreso el {{ 'now'|date('d/m/Y H:i:s') }}</p>
+</div>
+
+</body>
+</html>

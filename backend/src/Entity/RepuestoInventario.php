@@ -51,6 +51,18 @@ class RepuestoInventario
     #[Groups(['repuesto:read', 'repuesto:write'])]
     private ?string $estado = null; // Disponible, Reservado, Agotado
 
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
+    #[Groups(['repuesto:read', 'repuesto:write'])]
+    private ?string $precio = null;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    #[Groups(['repuesto:read', 'repuesto:write'])]
+    private ?string $fuente = null; // 'Almacen', 'CajaChica'
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[Groups(['repuesto:read', 'repuesto:write'])]
+    private ?\DateTimeInterface $fechaIngreso = null;
+
     public function getId(): ?int { return $this->id; }
 
     public function getTipoComponente(): ?TipoComponente { return $this->tipoComponente; }
@@ -70,4 +82,13 @@ class RepuestoInventario
 
     public function getEstado(): ?string { return $this->estado; }
     public function setEstado(string $estado): static { $this->estado = $estado; return $this; }
+
+    public function getPrecio(): ?string { return $this->precio; }
+    public function setPrecio(?string $precio): static { $this->precio = $precio; return $this; }
+
+    public function getFuente(): ?string { return $this->fuente; }
+    public function setFuente(?string $fuente): static { $this->fuente = $fuente; return $this; }
+
+    public function getFechaIngreso(): ?\DateTimeInterface { return $this->fechaIngreso; }
+    public function setFechaIngreso(?\DateTimeInterface $fechaIngreso): static { $this->fechaIngreso = $fechaIngreso; return $this; }
 }

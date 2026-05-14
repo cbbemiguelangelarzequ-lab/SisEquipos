@@ -18,11 +18,11 @@ class Centro
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['usuario:read', 'equipo:read', 'repuesto:read', 'seccion:read'])]
+    #[Groups(['usuario:read', 'equipo:read', 'repuesto:read', 'seccion:read', 'transferencia:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 150)]
-    #[Groups(['usuario:read', 'equipo:read', 'repuesto:read', 'seccion:read'])]
+    #[Groups(['usuario:read', 'equipo:read', 'repuesto:read', 'seccion:read', 'transferencia:read'])]
     private ?string $nombre = null;
 
     #[ORM\OneToMany(mappedBy: 'centro', targetEntity: Usuario::class)]

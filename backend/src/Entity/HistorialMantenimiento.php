@@ -65,6 +65,17 @@ class HistorialMantenimiento
     #[Groups(['historial:read', 'historial:write'])]
     private ?\DateTimeInterface $fechaMantenimiento = null;
 
+    // Tipo de mantenimiento: 'Correctivo' (desde solicitud) o 'Preventivo' (desde plan).
+    #[ORM\Column(type: 'string', length: 50, options: ['default' => 'Correctivo'])]
+    #[Groups(['historial:read', 'historial:write'])]
+    private string $tipo = 'Correctivo';
+
+    // Plan preventivo que originó este historial (null si es correctivo o directo).
+    #[ORM\ManyToOne(targetEntity: PlanMantenimientoPreventivo::class)]
+    #[ORM\JoinColumn(name: 'plan_preventivo_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    #[Groups(['historial:read', 'historial:write'])]
+    private ?PlanMantenimientoPreventivo $planPreventivo = null;
+
     public function getId(): ?int { return $this->id; }
 
     public function getEquipo(): ?Equipo { return $this->equipo; }
@@ -87,4 +98,10 @@ class HistorialMantenimiento
 
     public function getFechaMantenimiento(): ?\DateTimeInterface { return $this->fechaMantenimiento; }
     public function setFechaMantenimiento(?\DateTimeInterface $fecha): static { $this->fechaMantenimiento = $fecha; return $this; }
+
+    public function getTipo(): string { return $this->tipo; }
+    public function setTipo(string $tipo): static { $this->tipo = $tipo; return $this; }
+
+    public function getPlanPreventivo(): ?PlanMantenimientoPreventivo { return $this->planPreventivo; }
+    public function setPlanPreventivo(?PlanMantenimientoPreventivo $plan): static { $this->planPreventivo = $plan; return $this; }
 }

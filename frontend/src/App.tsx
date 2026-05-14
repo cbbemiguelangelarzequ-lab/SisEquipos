@@ -8,6 +8,8 @@ import { Secciones } from './pages/Secciones';
 import { Administracion } from './pages/Administracion';
 import { Mantenimiento } from './pages/Mantenimiento';
 import { Bodega } from './pages/Bodega';
+import Transferencias from './pages/Transferencias';
+import { Reportes } from './pages/Reportes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient({
@@ -35,6 +37,8 @@ function App() {
             <Route path="administracion" element={<Administracion />} />
             <Route path="mantenimiento" element={<Mantenimiento />} />
             <Route path="bodega" element={<Bodega />} />
+            <Route path="transferencias" element={<Transferencias />} />
+            <Route path="reportes" element={<Reportes />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

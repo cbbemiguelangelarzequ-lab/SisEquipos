@@ -25,11 +25,11 @@ class Seccion
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['seccion:read', 'solicitud:read', 'equipo:read', 'historial:read'])]
+    #[Groups(['seccion:read', 'solicitud:read', 'equipo:read', 'historial:read', 'transferencia:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 150)]
-    #[Groups(['seccion:read', 'seccion:write', 'solicitud:read', 'equipo:read', 'historial:read'])]
+    #[Groups(['seccion:read', 'seccion:write', 'solicitud:read', 'equipo:read', 'historial:read', 'transferencia:read'])]
     private ?string $nombre = null;
 
     #[ORM\ManyToOne(targetEntity: Centro::class, inversedBy: 'secciones')]

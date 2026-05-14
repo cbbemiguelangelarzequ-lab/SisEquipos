@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte de Inventario</title>
+    <style>
+        @page { size: letter landscape; margin: 30px; }
+        body { font-family: 'Helvetica', 'Arial', sans-serif; color: #333; margin: 0; }
+        
+        .header { margin-bottom: 20px; }
+        .title { font-size: 20px; color: #1e3a8a; margin: 0 0 5px 0; font-weight: bold; }
+        .subtitle { font-size: 11px; color: #6b7280; margin: 0; }
+        
+        table.inventory-table { width: 100%; border-collapse: collapse; font-size: 10px; margin-top: 15px; }
+        table.inventory-table th { background-color: #0f766e; color: white; text-align: left; padding: 8px 5px; font-weight: bold; border: 1px solid #0f766e; }
+        table.inventory-table td { padding: 6px 5px; border: 1px solid #e5e7eb; border-bottom: 1px solid #d1d5db; vertical-align: top; }
+        
+        table.inventory-table tr:nth-child(even) td { background-color: #f9fafb; }
+        
+        .footer-stamp { text-align: center; margin-top: 30px; font-style: italic; color: #9ca3af; font-size: 9px;}
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1 class="title">Caja Petrolera de Salud - Reporte de Inventario</h1>
+    <p class="subtitle">
+        Generado: {{ fecha|date('d \\d\\e F \\d\\e Y \\a \\l\\a\\s H:i') }} - Total listado: {{ equipos|length }} equipos
+    </p>
+    {% if searchTerm %}
+        <p class="subtitle" style="margin-top: 2px;">Filtro aplicado: "{{ searchTerm }}"</p>
+    {% endif %}
+    {% if limitado is defined and limitado %}
+        <p style="margin-top: 4px; color: #b45309; font-size: 10px; font-weight: bold;">
+            ⚠ Reporte limitado: se muestran los primeros {{ maxEquipos }} de {{ totalOriginal }} equipos.
+            Usa el filtro de búsqueda para exportar grupos más pequeños.
+        </p>
+    {% endif %}
+</div>
+
+<table class="inventory-table">
+    <thead>
+        <tr>
+            <th style="width: 12%;">Código</th>
+            <th style="width: 25%;">Nombre del Equipo</th>
+            <th style="width: 18%;">Marca/Modelo</th>
+            <th style="width: 12%;">Serie</th>
+            <th style="width: 10%;">Categoría</th>
+            <th style="width: 15%;">Centro / Sección</th>
+            <th style="width: 8%;">Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for eq in equipos %}
+            <tr>
+                <td>{{ eq.codigoInventario|default('-') }}</td>
+                <td>{{ eq.nombre|default('-') }}</td>
+                <td>{{ eq.marca|default('-') }} / {{ eq.modelo|default('-') }}</td>
+                <td>{{ eq.numeroSerie|default('-') }}</td>
+                <td>{{ eq.categoria ? eq.categoria.nombre : '-' }}</td>
+                <td>
+                    {% set centro = eq.centro ? (eq.centro.nombre|split(' ')|first) : 'Gen.' %}
+                    {% set seccion = eq.seccion ? eq.seccion.nombre : 'Gral.' %}
+                    {{ centro }} - {{ seccion }}
+                </td>
+                <td>{{ eq.estado ? eq.estado.nombre : '-' }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 20px;">No hay equipos listados en este reporte.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="footer-stamp">SisEquipos &mdash; Caja Petrolera de Salud</div>
+
+</body>
+</html>

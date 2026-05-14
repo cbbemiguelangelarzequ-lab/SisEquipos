@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario Transferencia</title>
+    <style>
+        @page { size: letter portrait; margin: 40px; }
+        body { 
+            font-family: 'Arial', sans-serif; 
+            color: #000; 
+            margin: 0; 
+            box-sizing: border-box;
+        }
+        table.layout { width: 100%; border-collapse: collapse; border: none; }
+        td.layout-sidebar { width: 140px; vertical-align: top; padding-right: 20px; }
+        td.layout-main { vertical-align: top; }
+
+        /* Sidebar Styles */
+        .sidebar {
+            font-family: 'Arial', sans-serif;
+            font-size: 9px;
+            color: #4bafaf;
+        }
+        .logo-box {
+            border: 2px solid #00605A;
+            padding: 8px;
+            width: 70px;
+            height: 80px;
+            text-align: center;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .logo-text-c { font-family: 'Arial Black', sans-serif; font-size: 28px; color: #fff; -webkit-text-stroke: 1.5px #00605A; position: absolute; top: 5px; left: 10px; line-height: 1;}
+        .logo-text-p { font-family: 'Arial Black', sans-serif; font-size: 28px; color: #fff; -webkit-text-stroke: 1.5px #00605A; position: absolute; top: 5px; right: 10px; line-height: 1;}
+        .logo-text-plus { font-family: 'Arial Black', sans-serif; font-size: 28px; color: #fff; -webkit-text-stroke: 1.5px #00605A; position: absolute; bottom: 5px; left: 10px; line-height: 1;}
+        .logo-text-s { font-family: 'Arial Black', sans-serif; font-size: 28px; color: #fff; -webkit-text-stroke: 1.5px #00605A; position: absolute; bottom: 5px; right: 10px; line-height: 1;}
+
+        /* Dompdf hack for -webkit-text-stroke is weak, so we just use normal color #00605A if transparent fails */
+        .logo-text { font-family: 'Arial Black', sans-serif; font-size: 24px; color: #00605A; font-weight: bold; }
+
+        .sidebar h4 {
+            color: #00605A;
+            margin: 0 0 4px 0;
+            font-size: 11px;
+            font-weight: 900;
+        }
+        .light-blue { color: #5cb8b2; margin-bottom: 20px; font-size: 10px; font-weight: normal; }
+        .section { margin-bottom: 20px; }
+        .section-title { color: #00605A; font-weight: bold; margin-bottom: 5px; font-size: 10px; }
+        .contact-info { margin: 0; line-height: 1.4; color: #5cb8b2; }
+        .divider-short { height: 2px; background-color: #5cb8b2; margin: 15px 0; width: 80px; }
+
+        /* Main Content Styles */
+        .title-cps { 
+            font-size: 34px; 
+            color: #fff;
+            text-shadow: -1px -1px 0 #5cb8b2, 1px -1px 0 #5cb8b2, -1px 1px 0 #5cb8b2, 1px 1px 0 #5cb8b2;
+            font-family: 'Arial Black', sans-serif; 
+            letter-spacing: 1px; 
+            text-transform: lowercase; 
+            margin-bottom: 5px;
+            margin-top: 0;
+        }
+        .divider-main { height: 3px; background-color: #5cb8b2; margin: 5px 0 10px 0; }
+        .main-title { 
+            font-size: 16px; 
+            font-weight: bold; 
+            font-style: italic; 
+            text-align: center; 
+            font-family: 'Times New Roman', Times, serif;
+            margin-bottom: 20px;
+        }
+
+        table.form-layout { width: 100%; border-collapse: collapse; border: none; margin-bottom: 10px; font-family: 'Times New Roman', Times, serif; font-size: 13px; font-weight: bold;}
+        table.form-layout td.label { width: 140px; padding-left: 20px; padding-bottom: 12px; }
+        table.form-layout td.value { border-bottom: 1px solid #000; padding: 2px 10px; background-color: #eef2fa; font-weight: normal; font-family: 'Arial', sans-serif; padding-bottom: 12px;}
+
+        .table-title { font-weight: bold; font-size: 14px; margin: 20px 0 5px 0; font-family: 'Times New Roman', Times, serif; }
+        table.items { width: 100%; border-collapse: collapse; border: 2px solid #000; font-family: 'Times New Roman', serif; font-size: 12px; }
+        table.items th { border: 1px solid #000; padding: 6px; text-align: center; font-weight: bold; font-family: 'Arial', sans-serif; }
+        table.items td { border: 1px solid #000; padding: 6px; text-align: center; height: 25px; background-color: #eef2fa;}
+        table.items td.desc { text-align: left; font-weight: normal; font-family: 'Arial', sans-serif; font-size: 11px; }
+
+        table.footer-layout { width: 100%; border-collapse: collapse; border: 2px solid #000; border-top: none; font-family: 'Times New Roman', serif; font-size: 11px; }
+        table.footer-layout td.notes { width: 70%; border-right: 2px solid #000; padding: 10px; vertical-align: top;}
+        table.footer-layout td.status-table { width: 30%; padding: 10px; vertical-align: top;}
+
+        .notes strong { font-family: 'Arial', sans-serif; font-size: 10px; }
+        .notes ol { padding-left: 20px; margin: 5px 0 0 0; font-weight: normal; list-style-type: lower-alpha; font-size: 10px; }
+        
+        .status-table strong { font-family: 'Arial', sans-serif; font-size: 11px; margin-bottom: 5px; display: block;}
+        table.status { border: 1px solid #000; width: 100%; font-size: 10px; border-collapse: collapse;}
+        table.status td { padding: 2px 5px; border: 1px solid #000; text-align: left; }
+        table.status td.num { text-align: center; padding-left: 0; width: 25px; }
+
+        .declaration { font-size: 12px; margin-top: 25px; font-family: 'Times New Roman', serif; }
+        .declaration strong { font-family: 'Arial', sans-serif; font-size: 11px;}
+        .declaration p { font-weight: normal; margin-top: 5px; margin-left: 20px;}
+
+        table.signatures { width: 100%; margin-top: 80px; text-align: center; font-size: 12px; font-weight: bold; font-family: 'Times New Roman', serif; }
+        table.signatures td { width: 50%; padding-bottom: 70px; }
+        .sig-line { border-top: 1px dashed #000; margin-bottom: 5px; width: 180px; margin-left: auto; margin-right: auto; }
+        .sig-box span { font-weight: normal; font-size: 10px; display: block; margin-top: 2px;}
+
+        .page-footer {
+            margin-top: 30px;
+            border-top: 2px solid #5cb8b2;
+            padding-top: 5px;
+            font-family: 'Arial', sans-serif;
+            font-size: 10px;
+            color: #5cb8b2;
+        }
+        table.footer-text { width: 100%; border: none; }
+        table.footer-text td.left { text-align: left; }
+        table.footer-text td.right { text-align: right; }
+    </style>
+</head>
+<body>
+
+<table class="layout">
+    <tr>
+        <td class="layout-sidebar">
+            <div class="sidebar">
+                <div class="logo-box">
+                    <div style="font-family: 'Arial Black', sans-serif; font-size: 32px; color: #00605A; font-weight: bold; line-height: 28px;">
+                        C P<br>+ S
+                    </div>
+                </div>
+                
+                <h4>UNIDAD DE<br>ACTIVOS FIJOS</h4>
+                <div class="light-blue">DEPARTAMENTAL<br>COCHABAMBA</div>
+                
+                <div class="section">
+                    <div class="section-title" style="font-weight: normal;">TELÉFONOS</div>
+                    <div class="contact-info">
+                        Gral. Achá<br>
+                        &nbsp;&nbsp;Int. 124<br>
+                        &nbsp;&nbsp;VoIP<br>
+                        &nbsp;&nbsp;4006<br>
+                        Policlínico<br>
+                        &nbsp;&nbsp;Int. 245<br>
+                        &nbsp;&nbsp;VoIP<br>
+                        &nbsp;&nbsp;4053<br>
+                        Hospital E. Seton<br>
+                        &nbsp;&nbsp;Int. 246<br>
+                        &nbsp;&nbsp;VoIP<br>
+                        &nbsp;&nbsp;4104
+                    </div>
+                </div>
+                
+                <div class="divider-short"></div>
+                
+                <div class="section">
+                    <div class="section-title">ADMINISTRACIÓN</div>
+                    <div class="contact-info">
+                        Calle Gral. Achá O-186<br>
+                        Telf. 4585729<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4585728<br>
+                        Fax &nbsp;&nbsp;4223952
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">POLICLÍNICO</div>
+                    <div class="contact-info">
+                        Calle Bolivar E-502<br>
+                        Telf. 4224433<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4229505<br>
+                        Fax &nbsp;&nbsp;4506836
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">HOSPITAL SETON</div>
+                    <div class="contact-info">
+                        Av. B. Galindo Km 5<br>
+                        Telf. 4240205<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2420202<br>
+                        Fax &nbsp;&nbsp;4241889
+                    </div>
+                </div>
+            </div>
+        </td>
+        <td class="layout-main">
+            <h1 class="title-cps">caja petrolera de salud</h1>
+            <div class="divider-main"></div>
+            <div class="main-title">FORMULARIO DE TRANSFERENCIA DE ACTIVOS FIJOS</div>
+            
+            <table class="form-layout">
+                <tr>
+                    <td class="label">TRANSFERIR DE:</td>
+                    <td class="value">
+                        {{ transferencia.centroOrigen ? transferencia.centroOrigen.nombre : '-' }} 
+                        {{ transferencia.seccionOrigen ? ' / ' ~ transferencia.seccionOrigen.nombre : '' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">TRANSFERIR A:</td>
+                    <td class="value">
+                        {{ transferencia.centroDestino ? transferencia.centroDestino.nombre : '-' }} 
+                        {{ transferencia.seccionDestino ? ' / ' ~ transferencia.seccionDestino.nombre : '' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">FECHA:</td>
+                    <td class="value">{{ transferencia.fechaSolicitud|date('d/m/Y') }}</td>
+                </tr>
+            </table>
+            
+            <div class="table-title">DESCRIPCIÓN DEL ACTIVO: (CÓDIGO, SERIE, MARCA, OTROS):</div>
+            <table class="items">
+                <thead>
+                    <tr>
+                        <th width="15%">COD.ACT.</th>
+                        <th width="10%">CANT.</th>
+                        <th width="65%">DESCRIPCIÓN</th>
+                        <th width="10%">EST.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set count = 0 %}
+                    {% for item in items %}
+                        {% set count = count + 1 %}
+                        <tr>
+                            <td>{{ item.equipo.codigoInventario|default('') }}</td>
+                            <td>1</td>
+                            <td class="desc">
+                                {{ item.equipo.nombre|default('') }} - 
+                                {{ item.equipo.marca|default('') }} {{ item.equipo.modelo|default('') }} 
+                                (S/N: {{ item.equipo.numeroSerie|default('') }})
+                            </td>
+                            <td>{{ item.estadoActivo|split(' - ')[0]|default('') }}</td>
+                        </tr>
+                    {% endfor %}
+                    
+                    {% if count < 7 %}
+                        {% for i in range(count + 1, 7) %}
+                            <tr><td></td><td></td><td></td><td></td></tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+            
+            <table class="footer-layout">
+                <tr>
+                    <td class="notes">
+                        <strong>NOTA: Los servidores públicos quedan prohibidos de:</strong>
+                        <ol>
+                            <li>Usar los bienes para beneficio particular o privado</li>
+                            <li>Permitir el uso para beneficio particular o privado</li>
+                            <li>Prestar o transferir el bien sin conocimiento de Activos Fijos</li>
+                            <li>Enajenar el bien por cuenta propia</li>
+                            <li>Dañar o alterar sus características físicas o técnicas</li>
+                            <li>Poner en riesgo el bien</li>
+                            <li>Ingresar bienes particulares sin autorización de Activos Fijos</li>
+                            <li>Sacar bienes de la entidad sin autorización de Activos Fijos</li>
+                        </ol>
+                    </td>
+                    <td class="status-table">
+                        <strong>Estado del activo fijo</strong>
+                        <table class="status">
+                            <tr><td class="num">1</td><td>Nuevo</td></tr>
+                            <tr><td class="num">2</td><td>Bueno</td></tr>
+                            <tr><td class="num">3+</td><td>Regular</td></tr>
+                            <tr><td class="num">3-</td><td>Deteriorado</td></tr>
+                            <tr><td class="num">4</td><td>Malo</td></tr>
+                            <tr><td class="num">5</td><td>Obsoleto</td></tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            
+            <div class="declaration">
+                <strong>UNA VEZ RECIBIDOS LOS BIENES DESCRITOS:</strong>
+                <p>Acepto estos bienes bajo mi custodia y me responsabilizo de cualquier daño o deterioro ocasionado por razones ajenas<br>al uso normal de los mismos</p>
+            </div>
+            
+            <table class="signatures">
+                <tr>
+                    <td>
+                        <div class="sig-box">
+                            <div class="sig-line"></div>
+                            SOLICITADO POR
+                            <span>FIRMA Y SELLO</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="sig-box">
+                            <div class="sig-line"></div>
+                            AUTORIZADO
+                            <span>FIRMA Y SELLO</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="sig-box">
+                            <div class="sig-line"></div>
+                            ENTREGADO POR
+                            <span>FIRMA Y SELLO</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="sig-box">
+                            <div class="sig-line"></div>
+                            RECIBIDO POR
+                            <span>FIRMA Y SELLO</span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            
+        </td>
+    </tr>
+</table>
+
+<div class="page-footer">
+    <table class="footer-text">
+        <tr>
+            <td class="left">Calle General Acha esq. Junín N° o-0186<br>Telf. 4585729 4585728</td>
+            <td class="right">Call center 800 10 31 41<br>www.cps.org.bo</td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

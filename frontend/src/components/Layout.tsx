@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Outlet, Navigate, NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, PackageSearch, LogOut, Settings, Wrench, Database, ChevronDown, Building2 } from 'lucide-react';
+import { LayoutDashboard, PackageSearch, LogOut, Settings, Wrench, Database, ChevronDown, Building2, BarChart3 } from 'lucide-react';
 import { api } from '../services/api';
 import { getUserInfo } from '../services/auth';
 
@@ -105,6 +105,22 @@ export const Layout = () => {
           >
             <Database size={20} />
             Repuestos
+          </NavLink>
+
+          <NavLink 
+            to="/transferencias" 
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+          >
+            <PackageSearch size={20} />
+            Transferencias
+          </NavLink>
+
+          <NavLink 
+            to="/reportes" 
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+          >
+            <BarChart3 size={20} />
+            Reportes
           </NavLink>
 
           <NavLink 

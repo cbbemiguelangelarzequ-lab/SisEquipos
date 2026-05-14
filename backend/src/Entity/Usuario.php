@@ -23,16 +23,20 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['usuario:read', 'solicitud:read', 'historial:read'])]
+    #[Groups(['usuario:read', 'solicitud:read', 'historial:read', 'transferencia:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 180)]
-    #[Groups(['usuario:read', 'usuario:write', 'solicitud:read', 'historial:read'])]
+    #[Groups(['usuario:read', 'usuario:write', 'solicitud:read', 'historial:read', 'transferencia:read'])]
     private ?string $nombre = null;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Groups(['usuario:read', 'usuario:write', 'solicitud:read', 'historial:read'])]
     private ?string $email = null;
+
+    #[ORM\Column(type: 'string', length: 50, unique: true, nullable: true)]
+    #[Groups(['usuario:read', 'usuario:write'])]
+    private ?string $carnet = null;
 
     #[ORM\Column(type: 'string')]
     #[Groups(['usuario:write'])]
@@ -55,6 +59,9 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getEmail(): ?string { return $this->email; }
     public function setEmail(string $email): static { $this->email = $email; return $this; }
+
+    public function getCarnet(): ?string { return $this->carnet; }
+    public function setCarnet(?string $carnet): static { $this->carnet = $carnet; return $this; }
 
     public function getUserIdentifier(): string { return (string) $this->email; }
 

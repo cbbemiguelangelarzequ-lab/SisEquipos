@@ -19,33 +19,33 @@ use Symfony\Component\Serializer\Annotation\Groups;
     denormalizationContext: ['groups' => ['equipo:write']],
     paginationClientEnabled: true
 )]
-#[ApiFilter(SearchFilter::class, properties: ['centro' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['centro' => 'exact', 'seccion' => 'exact'])]
 class Equipo
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['solicitud:read', 'equipo:read', 'historial:read'])]
+    #[Groups(['solicitud:read', 'equipo:read', 'historial:read', 'transferencia:read', 'transferencia_item:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 100, unique: true)]
-    #[Groups(['solicitud:read', 'equipo:read', 'historial:read', 'equipo:write'])]
+    #[Groups(['solicitud:read', 'equipo:read', 'historial:read', 'equipo:write', 'transferencia:read', 'transferencia_item:read'])]
     private ?string $codigoInventario = null;
 
     #[ORM\Column(type: 'string', length: 200)]
-    #[Groups(['solicitud:read', 'equipo:read', 'historial:read', 'equipo:write'])]
+    #[Groups(['solicitud:read', 'equipo:read', 'historial:read', 'equipo:write', 'transferencia:read', 'transferencia_item:read'])]
     private ?string $nombre = null;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    #[Groups(['solicitud:read', 'equipo:read', 'historial:read', 'equipo:write'])]
+    #[Groups(['solicitud:read', 'equipo:read', 'historial:read', 'equipo:write', 'transferencia:read', 'transferencia_item:read'])]
     private ?string $marca = null;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    #[Groups(['solicitud:read', 'equipo:read', 'historial:read', 'equipo:write'])]
+    #[Groups(['solicitud:read', 'equipo:read', 'historial:read', 'equipo:write', 'transferencia:read', 'transferencia_item:read'])]
     private ?string $modelo = null;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    #[Groups(['solicitud:read', 'equipo:read', 'historial:read', 'equipo:write'])]
+    #[Groups(['solicitud:read', 'equipo:read', 'historial:read', 'equipo:write', 'transferencia:read', 'transferencia_item:read'])]
     private ?string $numeroSerie = null;
 
     #[ORM\ManyToOne(targetEntity: CategoriaEquipo::class, inversedBy: 'equipos')]
@@ -128,9 +128,7 @@ class Equipo
 
     public function getComponentes(): Collection { return $this->componentes; }
 
-    /**
-     * Calcula la fecha estimada de fin de vida útil.
-     */
+    // Calcula la fecha estimada de fin de vida útil.
     public function getFechaFinVidaUtil(): ?\DateTimeInterface
     {
         if (!$this->fechaAdquisicion || !$this->vidaUtilMeses) {
@@ -143,9 +141,7 @@ class Equipo
         return $fechaFin;
     }
 
-    /**
-     * Devuelve verdadero si el equipo ya superó su tiempo de vida útil.
-     */
+    // Devuelve verdadero si el equipo ya superó su tiempo de vida útil.
     #[Groups(['solicitud:read', 'equipo:read'])]
     public function isObsoleto(): bool
     {
@@ -158,9 +154,7 @@ class Equipo
         return new \DateTime() > $fechaFin;
     }
 
-    /**
-     * Devuelve el porcentaje de vida útil consumido (0 a 100).
-     */
+    // Devuelve el porcentaje de vida útil consumido (0 a 100).
     #[Groups(['solicitud:read', 'equipo:read'])]
     public function getPorcentajeVidaUtilConsumido(): ?float
     {

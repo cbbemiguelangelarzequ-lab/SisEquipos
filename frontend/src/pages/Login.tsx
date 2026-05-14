@@ -5,7 +5,7 @@ import { api } from '../services/api';
 import { LogIn, Eye, EyeOff, User, Lock } from 'lucide-react';
 
 export const Login = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -21,7 +21,7 @@ export const Login = () => {
 
     try {
       const response = await api.post('/login_check', {
-        email,
+        username,
         password
       });
 
@@ -79,11 +79,11 @@ export const Login = () => {
                   <User size={18} className="text-emerald-700" />
                 </div>
                 <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
-                  placeholder="Correo Electrónico"
+                  placeholder="Correo electrónico o carnet"
                   className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 text-slate-800 rounded-xl outline-none focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 transition-all font-medium placeholder:font-normal placeholder:text-slate-400"
                 />
               </div>

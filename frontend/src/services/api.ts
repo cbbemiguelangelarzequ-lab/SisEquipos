@@ -30,11 +30,23 @@ api.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
+    // Si el responseType era 'blob' y el servidor devuelvió un error,
+    // el body será un Blob ilegible — lo convertimos a texto/JSON para poder leerlo.
+    if (error.response?.data instanceof Blob && error.response.data.type !== 'application/pdf') {
+      try {
+        const text = await error.response.data.text();
+        try {
+          error.response.data = JSON.parse(text);
+        } catch {
+          error.response.data = { message: text };
+        }
+      } catch (_) { /* dejar como está si falla */ }
+    }
     if (error.response?.status === 401 && !originalRequest._retry) {
       localStorage.removeItem('token');
       window.location.href = '/login';
     } else {
-      console.error('API ERROR:', originalRequest?.url, error.message, error.response?.status);
+      console.error('API ERROR:', originalRequest?.url, error.message, error.response?.status, error.response?.data);
     }
     return Promise.reject(error);
   }

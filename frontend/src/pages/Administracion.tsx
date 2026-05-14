@@ -5,7 +5,7 @@ import { getUserInfo } from '../services/auth';
 import { ConfirmDeleteModal } from '../components/ConfirmDeleteModal';
 
 interface CatItem { id: number; nombre: string; }
-interface UsuarioItem { id: number; nombre: string; email: string; rol?: any; centro?: any; }
+interface UsuarioItem { id: number; nombre: string; email: string; carnet?: string | null; rol?: any; centro?: any; }
 
 const CatalogCard = ({ title, items, count, endpoint, onSaved }: { title: string; items: CatItem[]; count: number; endpoint: string; onSaved: () => void; }) => {
   const [input, setInput] = useState('');
@@ -278,7 +278,7 @@ const UsuariosTabView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSuperUser, setIsSuperUser] = useState(false);
 
-  const [formData, setFormData] = useState({ id: null as null|number, nombre: '', email: '', password: '', rol: '', centro: '' });
+  const [formData, setFormData] = useState({ id: null as null|number, nombre: '', email: '', carnet: '', password: '', rol: '', centro: '' });
   const [deleteModalState, setDeleteModalState] = useState<{isOpen: boolean, id: number | null, isLoading: boolean}>({isOpen: false, id: null, isLoading: false});
 
   useEffect(() => { fetchUsersAndData(); }, []);
@@ -297,7 +297,9 @@ const UsuariosTabView = () => {
     try {
       const payload: any = { nombre: formData.nombre, email: formData.email, rol: `/api/rols/${formData.rol}` };
       if (formData.password) payload.password = formData.password;
-      
+      if (formData.carnet.trim()) payload.carnet = formData.carnet.trim();
+      else payload.carnet = null;
+
       // Si no es super usuario, exige un centro, si lo es, lo deja nulo
       if (!isSuperUser && formData.centro) {
         payload.centro = `/api/centros/${formData.centro}`;
@@ -328,7 +330,7 @@ const UsuariosTabView = () => {
         <button className="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2"
           onClick={() => { 
             setIsSuperUser(false); 
-            setFormData({ id: null, nombre: '', email: '', password: '', rol: '', centro: '' }); 
+            setFormData({ id: null, nombre: '', email: '', carnet: '', password: '', rol: '', centro: '' }); 
             setIsModalOpen(true); 
           }}
         >
@@ -341,25 +343,31 @@ const UsuariosTabView = () => {
             <tr className="border-b border-slate-200 text-slate-500 font-medium text-sm">
               <th className="py-3 px-4">Nombre</th>
               <th className="py-3 px-4">Email</th>
+              <th className="py-3 px-4">Carnet</th>
               <th className="py-3 px-4">Centro</th>
               <th className="py-3 px-4">Rol</th>
               <th className="py-3 px-4 text-center">Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {loading ? <tr><td colSpan={5} className="py-6 text-center text-slate-500">Cargando...</td></tr> : 
-             usuarios.length === 0 ? <tr><td colSpan={5} className="py-6 text-center text-slate-500">No hay usuarios</td></tr> :
+            {loading ? <tr><td colSpan={6} className="py-6 text-center text-slate-500">Cargando...</td></tr> : 
+             usuarios.length === 0 ? <tr><td colSpan={6} className="py-6 text-center text-slate-500">No hay usuarios</td></tr> :
              usuarios.map(u => (
                <tr key={u.id} className="border-b border-slate-50 hover:bg-slate-50 transition-colors">
                  <td className="py-3 px-4 font-semibold text-slate-800">{u.nombre}</td>
                  <td className="py-3 px-4 text-slate-600">{u.email}</td>
                  <td className="py-3 px-4">
+                   {u.carnet ? (
+                     <span className="bg-emerald-50 text-emerald-700 px-2 py-1 rounded-md text-xs font-mono font-semibold border border-emerald-100">{u.carnet}</span>
+                   ) : (
+                     <span className="text-slate-300 text-xs italic">—</span>
+                   )}
+                 </td>
+                 <td className="py-3 px-4">
                     {u.centro?.nombre ? (
                       <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-md text-xs font-semibold">{u.centro.nombre}</span>
-                    ) : u.rol?.nombre?.toLowerCase().includes('super') ? (
-                      <span className="bg-brand-100 text-brand-700 px-2 py-1 rounded-md text-xs font-semibold">SuperUsuario (Global)</span>
                     ) : (
-                      <span className="bg-slate-100 text-slate-400 px-2 py-1 rounded-md text-xs font-semibold italic">Sin centro</span>
+                      <span className="bg-brand-100 text-brand-700 px-2 py-1 rounded-md text-xs font-semibold">Global (Todos)</span>
                     )}
                   </td>
                  <td className="py-3 px-4 text-slate-600">{u.rol?.nombre}</td>
@@ -368,7 +376,7 @@ const UsuariosTabView = () => {
                       const hasCentro = !!u.centro;
                       setIsSuperUser(!hasCentro);
                       setFormData({ 
-                        id: u.id, nombre: u.nombre, email: u.email, password: '', 
+                        id: u.id, nombre: u.nombre, email: u.email, carnet: u.carnet || '', password: '', 
                         rol: u.rol?.id?.toString() || (u.rol ? u.rol.split('/').pop() : ''), 
                         centro: u.centro?.id?.toString() || (u.centro ? u.centro.split('/').pop() : '') 
                       });
@@ -394,9 +402,15 @@ const UsuariosTabView = () => {
                 <label className="block text-sm font-semibold text-slate-700 mb-1">Nombre Completo</label>
                 <input required value={formData.nombre} onChange={e => setFormData({...formData, nombre: e.target.value})} className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-brand-500" />
               </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Email</label>
-                <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-brand-500" />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">Email</label>
+                  <input required type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-brand-500" />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">Carnet</label>
+                  <input required type="text" value={formData.carnet} onChange={e => setFormData({...formData, carnet: e.target.value})} placeholder="Ej: CPS-12345" className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-brand-500 font-mono" />
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1">Contraseña {formData.id && <span className="font-normal text-xs text-slate-400">(Dejar vacío para no cambiar)</span>}</label>

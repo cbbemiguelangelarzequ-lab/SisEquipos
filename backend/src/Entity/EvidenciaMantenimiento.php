@@ -30,16 +30,12 @@ class EvidenciaMantenimiento
     #[Groups(['evidencia:read', 'evidencia:write'])]
     private ?HistorialMantenimiento $historial = null;
 
-    /**
-     * Tipo: 'antes' (componente viejo/falla) o 'despues' (componente nuevo/reparado)
-     */
+    // Tipo: 'antes' (componente viejo/falla) o 'despues' (componente nuevo/reparado)
     #[ORM\Column(type: 'string', length: 20)]
     #[Groups(['evidencia:read', 'evidencia:write'])]
     private string $tipo = 'antes';
 
-    /**
-     * Imagen en formato base64 Data URL (data:image/jpeg;base64,...)
-     */
+    // Imagen en formato base64 Data URL (data:image/jpeg;base64,...)
     #[ORM\Column(type: 'text', length: 16777215)]
     #[Groups(['evidencia:read', 'evidencia:write'])]
     private ?string $imagenBase64 = null;

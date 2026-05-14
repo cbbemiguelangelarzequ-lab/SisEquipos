@@ -56,9 +56,9 @@ const MoneyTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-/* ──────────────────────────────────────────────────────────────────────────────
- * DASHBOARD SÚPER USUARIO (GLOBAL)
- * ────────────────────────────────────────────────────────────────────────────── */
+
+//DASHBOARD SÚPER USUARIO 
+
 const SuperUserDashboard = () => {
   const { data: centros = [], isLoading: loadC } = useQuery({
     queryKey: ['centros'],
@@ -166,9 +166,9 @@ const SuperUserDashboard = () => {
 };
 
 
-/* ──────────────────────────────────────────────────────────────────────────────
- * DASHBOARD USUARIO NORMAL (CENTRO ESPECÍFICO)
- * ────────────────────────────────────────────────────────────────────────────── */
+
+//DASHBOARD USUARIO NORMAL
+
 const NormalUserDashboard = ({ centroId }: { centroId: number }) => {
   const centroFilterEq = `?pagination=false&centro=${centroId}`;
   const centroFilterSol = `?pagination=false&equipo.centro=${centroId}`;
@@ -235,14 +235,14 @@ const NormalUserDashboard = ({ centroId }: { centroId: number }) => {
       const nombre = e.categoria?.nombre || 'Sin categoría';
       conteo[nombre] = (conteo[nombre] || 0) + 1;
     });
-    
+
     const entries = Object.entries(conteo).sort((a, b) => b[1] - a[1]);
     if (entries.length > 6) {
       const main = entries.slice(0, 5).map(([name, value]) => ({ name, value }));
       const others = entries.slice(5).reduce((acc, curr) => acc + curr[1], 0);
       return [...main, { name: 'Otros', value: others }];
     }
-    
+
     return entries.map(([name, value]) => ({ name, value }));
   }, [equipos]);
 
@@ -420,9 +420,9 @@ const NormalUserDashboard = ({ centroId }: { centroId: number }) => {
   );
 };
 
-/* ──────────────────────────────────────────────────────────────────────────────
- * COMPONENTE PRINCIPAL
- * ────────────────────────────────────────────────────────────────────────────── */
+
+//COMPONENTE PRINCIPAL
+
 export const Dashboard = () => {
   const user = getUserInfo();
 
